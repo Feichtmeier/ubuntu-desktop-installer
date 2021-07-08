@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:ubuntu_desktop_installer/pages/who_are_you_page.dart';
 import 'package:yaru/yaru.dart' as yaru;
 
 import 'app_theme.dart';
@@ -45,7 +46,7 @@ class UbuntuDesktopInstallerApp extends StatelessWidget {
           const LocalizationsDelegateOc(),
         ],
         supportedLocales: AppLocalizations.supportedLocales,
-        home: WelcomePage(),
+        home: WhoAreYouPage(),
         routes: <String, WidgetBuilder>{
           Routes.tryOrInstall: (context) => TryOrInstallPage(),
           Routes.turnOffRST: (context) => const TurnOffRSTPage(),
@@ -54,6 +55,7 @@ class UbuntuDesktopInstallerApp extends StatelessWidget {
           Routes.allocateDiskSpace: (context) => AllocateDiskSpacePage(),
           Routes.writeChangesToDisk: (context) => WriteChangesToDiskPage(),
           Routes.chooseYourLook: (context) => ChooseYourLookPage(),
+          Routes.whoAreYouPage: (context) => WhoAreYouPage()
         },
       ),
     );

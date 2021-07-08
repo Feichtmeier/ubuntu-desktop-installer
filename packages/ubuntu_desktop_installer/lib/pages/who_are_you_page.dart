@@ -20,9 +20,19 @@ enum LoginStrategy { REQUIRE_PASSWORD, AUTO_LOGIN }
 class _WhoAreYouPageState extends State<WhoAreYouPage> {
   final avatars = [1, 2, 3, 4, 5];
   late LoginStrategy loginStrategy;
+  late TextEditingController realNameController;
+  late TextEditingController computerNameController;
+  late TextEditingController usernameController;
+  late TextEditingController passwordController;
+  late TextEditingController confirmPasswordController;
 
   @override
   void initState() {
+    realNameController = TextEditingController();
+    computerNameController = TextEditingController();
+    usernameController = TextEditingController();
+    passwordController = TextEditingController();
+    confirmPasswordController = TextEditingController();
     loginStrategy = LoginStrategy.REQUIRE_PASSWORD;
     super.initState();
   }
@@ -48,6 +58,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                               child: SizedBox(
                                 width: MediaQuery.of(context).size.width / 2,
                                 child: TextFormField(
+                                  controller: realNameController,
                                   decoration: InputDecoration(
                                       border: OutlineInputBorder(),
                                       labelText: 'Your name'),
@@ -69,6 +80,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                               child: SizedBox(
                                 width: MediaQuery.of(context).size.width / 2,
                                 child: TextFormField(
+                                  controller: computerNameController,
                                   decoration: InputDecoration(
                                       border: OutlineInputBorder(),
                                       labelText: 'Your Computers name'),
@@ -83,7 +95,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 15),
+                          padding: const EdgeInsets.only(top: 5, bottom: 15),
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width / 2,
                             child: Text(
@@ -98,6 +110,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                               child: SizedBox(
                                 width: MediaQuery.of(context).size.width / 2,
                                 child: TextFormField(
+                                  controller: usernameController,
                                   decoration: InputDecoration(
                                       border: OutlineInputBorder(),
                                       labelText: 'Pick a username'),
@@ -121,6 +134,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                       width:
                                           MediaQuery.of(context).size.width / 2,
                                       child: TextFormField(
+                                        controller: passwordController,
                                         obscureText: true,
                                         decoration: InputDecoration(
                                             border: OutlineInputBorder(),
@@ -146,6 +160,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                       width:
                                           MediaQuery.of(context).size.width / 2,
                                       child: TextFormField(
+                                        controller: confirmPasswordController,
                                         obscureText: true,
                                         decoration: InputDecoration(
                                             border: OutlineInputBorder(),
@@ -262,7 +277,11 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                     final client =
                         Provider.of<SubiquityClient>(context, listen: false);
 
-                    client.setIdentity(IdentityData());
+                    await client.setIdentity(IdentityData(
+                        hostname: computerNameController.text,
+                        realname: realNameController.text,
+                        username: usernameController.text,
+                        cryptedPassword: passwordController.text));
 
                     Navigator.pushNamed(context, Routes.chooseYourLook);
                   },

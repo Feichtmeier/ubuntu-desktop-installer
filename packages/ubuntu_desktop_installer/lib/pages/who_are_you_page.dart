@@ -90,30 +90,27 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                 'The name it uses when it talks to other computers.'),
                           ),
                         ),
-                        loginStrategy == LoginStrategy.REQUIRE_PASSWORD
-                            ? Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 10, bottom: 10),
-                                    child: SizedBox(
-                                      width:
-                                          MediaQuery.of(context).size.width / 2,
-                                      child: TextFormField(
-                                        decoration: InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            labelText: 'Pick a username'),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Icon(Icons.check_circle,
-                                        color: yaru.Colors.green),
-                                  )
-                                ],
-                              )
-                            : Padding(padding: EdgeInsets.all(1)),
+                        Row(
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 10, bottom: 10),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: TextFormField(
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Pick a username'),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Icon(Icons.check_circle,
+                                  color: yaru.Colors.green),
+                            )
+                          ],
+                        ),
                         loginStrategy == LoginStrategy.REQUIRE_PASSWORD
                             ? Row(
                                 children: [

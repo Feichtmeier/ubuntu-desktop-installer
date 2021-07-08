@@ -65,6 +65,8 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
     final _passwordFormKey = GlobalKey<FormState>();
     final _confirmPasswordFormKey = GlobalKey<FormState>();
 
+    var _passwordValidated = false;
+
     var password = '';
 
     return LocalizedView(
@@ -84,6 +86,10 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                             child: Form(
                               key: _nameFormKey,
                               child: TextFormField(
+                                autofocus: true,
+                                validator: RequiredValidator(
+                                    errorText: 'name is required'),
+                                autovalidateMode: AutovalidateMode.always,
                                 controller: realNameController,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
@@ -109,6 +115,8 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                             child: Form(
                               key: _computerNameFormKey,
                               child: TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 controller: computerNameController,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
@@ -143,6 +151,8 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                             child: Form(
                               key: _usernameFormKey,
                               child: TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
                                 controller: usernameController,
                                 validator: _usernameValidator,
                                 decoration: InputDecoration(
@@ -171,8 +181,16 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                   child: Form(
                                     key: _passwordFormKey,
                                     child: TextFormField(
+                                      autovalidateMode: AutovalidateMode.always,
                                       validator: _passwordValidator,
-                                      onChanged: (val) => password = val,
+                                      onChanged: (val) {
+                                        password = val;
+                                        _passwordValidated = (null !=
+                                                _passwordFormKey
+                                                    .currentState) &&
+                                            _passwordFormKey.currentState!
+                                                .validate();
+                                      },
                                       controller: passwordController,
                                       obscureText: true,
                                       decoration: InputDecoration(
@@ -184,8 +202,13 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(10.0),
-                                child: Icon(Icons.check_circle,
-                                    color: yaru.Colors.green),
+                                child: StatefulBuilder(
+                                    builder: (context, setState) {
+                                  return _passwordValidated
+                                      ? Icon(Icons.check_circle,
+                                          color: yaru.Colors.green)
+                                      : Text('');
+                                }),
                               )
                             ],
                           )
@@ -202,6 +225,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                   child: Form(
                                     key: _confirmPasswordFormKey,
                                     child: TextFormField(
+                                      autovalidateMode: AutovalidateMode.always,
                                       controller: confirmPasswordController,
                                       validator: (val) => MatchValidator(
                                               errorText:

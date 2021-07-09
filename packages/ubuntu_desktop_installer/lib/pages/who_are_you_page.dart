@@ -51,6 +51,10 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
           errorText: 'passwords must have at least one special character')
     ]);
 
+    final _computerNameValidator = PatternValidator(
+        r'(?!-)[A-Z\d-]{1,63}(?<!-)$',
+        errorText: 'Invalid computer name');
+
     final _usernameValidator = MultiValidator([
       RequiredValidator(errorText: 'username is required'),
       MinLengthValidator(2,
@@ -99,8 +103,11 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(10.0),
-                          child: Icon(Icons.check_circle,
-                              color: yaru.Colors.green),
+                          child: _nameFormKey.currentState == null ||
+                                  !_nameFormKey.currentState!.validate()
+                              ? Text('')
+                              : Icon(Icons.check_circle,
+                                  color: yaru.Colors.green),
                         )
                       ],
                     ),
@@ -117,7 +124,13 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 controller: computerNameController,
+                                validator: _computerNameValidator,
                                 decoration: InputDecoration(
+                                    suffix: Text(
+                                      'The name it uses when it talks to other computers.',
+                                      style:
+                                          Theme.of(context).textTheme.bodyText2,
+                                    ),
                                     border: OutlineInputBorder(),
                                     labelText: 'Your Computers name'),
                               ),
@@ -126,19 +139,13 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(10.0),
-                          child: Icon(Icons.check_circle,
-                              color: yaru.Colors.green),
+                          child: _computerNameFormKey.currentState == null ||
+                                  !_computerNameFormKey.currentState!.validate()
+                              ? Text('')
+                              : Icon(Icons.check_circle,
+                                  color: yaru.Colors.green),
                         )
                       ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 15),
-                      child: SizedBox(
-                        width:
-                            MediaQuery.of(context).size.width / _screenFactor,
-                        child: Text(
-                            'The name it uses when it talks to other computers.'),
-                      ),
                     ),
                     Row(
                       children: [
@@ -163,8 +170,11 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(10.0),
-                          child: Icon(Icons.check_circle,
-                              color: yaru.Colors.green),
+                          child: _usernameFormKey.currentState == null ||
+                                  !_usernameFormKey.currentState!.validate()
+                              ? Text('')
+                              : Icon(Icons.check_circle,
+                                  color: yaru.Colors.green),
                         )
                       ],
                     ),
@@ -183,14 +193,6 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                       autovalidateMode:
                                           AutovalidateMode.onUserInteraction,
                                       validator: _passwordValidator,
-                                      onChanged: (val) {
-                                        password = val;
-                                        _passwordValidated = (null !=
-                                                _passwordFormKey
-                                                    .currentState) &&
-                                            _passwordFormKey.currentState!
-                                                .validate();
-                                      },
                                       controller: passwordController,
                                       obscureText: true,
                                       decoration: InputDecoration(
@@ -202,13 +204,12 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(10.0),
-                                child: StatefulBuilder(
-                                    builder: (context, setState) {
-                                  return _passwordValidated
-                                      ? Icon(Icons.check_circle,
-                                          color: yaru.Colors.green)
-                                      : Text('');
-                                }),
+                                child: _passwordFormKey.currentState == null ||
+                                        !_passwordFormKey.currentState!
+                                            .validate()
+                                    ? Text('')
+                                    : Icon(Icons.check_circle,
+                                        color: yaru.Colors.green),
                               )
                             ],
                           )
@@ -232,8 +233,6 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                               errorText:
                                                   'passwords do not match')
                                           .validateMatch(val!, password),
-                                      onChanged: (_) =>
-                                          {password = passwordController.text},
                                       obscureText: true,
                                       decoration: InputDecoration(
                                           border: OutlineInputBorder(),
@@ -248,7 +247,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                             null ||
                                         !_confirmPasswordFormKey.currentState!
                                             .validate()
-                                    ? null
+                                    ? Text('')
                                     : Icon(Icons.check_circle,
                                         color: yaru.Colors.green),
                               )

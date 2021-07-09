@@ -19,13 +19,13 @@ class WhoAreYouPage extends StatefulWidget {
 enum LoginStrategy { REQUIRE_PASSWORD, AUTO_LOGIN }
 
 class _WhoAreYouPageState extends State<WhoAreYouPage> {
-  final avatars = [1, 2, 3, 4, 5];
   late LoginStrategy loginStrategy;
   late TextEditingController realNameController;
   late TextEditingController computerNameController;
   late TextEditingController usernameController;
   late TextEditingController passwordController;
   late TextEditingController confirmPasswordController;
+  late String password;
 
   @override
   void initState() {
@@ -34,6 +34,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
     usernameController = TextEditingController();
     passwordController = TextEditingController();
     confirmPasswordController = TextEditingController();
+    password = passwordController.text;
     loginStrategy = LoginStrategy.REQUIRE_PASSWORD;
     super.initState();
   }
@@ -66,8 +67,6 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
     final _confirmPasswordFormKey = GlobalKey<FormState>();
 
     var _passwordValidated = false;
-
-    var password = '';
 
     return LocalizedView(
         builder: (context, lang) => WizardPage(
@@ -181,7 +180,8 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                   child: Form(
                                     key: _passwordFormKey,
                                     child: TextFormField(
-                                      autovalidateMode: AutovalidateMode.always,
+                                      autovalidateMode:
+                                          AutovalidateMode.onUserInteraction,
                                       validator: _passwordValidator,
                                       onChanged: (val) {
                                         password = val;
@@ -225,12 +225,15 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                   child: Form(
                                     key: _confirmPasswordFormKey,
                                     child: TextFormField(
-                                      autovalidateMode: AutovalidateMode.always,
+                                      autovalidateMode:
+                                          AutovalidateMode.onUserInteraction,
                                       controller: confirmPasswordController,
                                       validator: (val) => MatchValidator(
                                               errorText:
                                                   'passwords do not match')
                                           .validateMatch(val!, password),
+                                      onChanged: (_) =>
+                                          {password = passwordController.text},
                                       obscureText: true,
                                       decoration: InputDecoration(
                                           border: OutlineInputBorder(),
@@ -298,14 +301,14 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                         _usernameFormKey.currentState!.validate() &&
                         _passwordFormKey.currentState!.validate() &&
                         _confirmPasswordFormKey.currentState!.validate()) {
-                      final client =
-                          Provider.of<SubiquityClient>(context, listen: false);
+                      // final client =
+                      //     Provider.of<SubiquityClient>(context, listen: false);
 
-                      await client.setIdentity(IdentityData(
-                          hostname: computerNameController.text,
-                          realname: realNameController.text,
-                          username: usernameController.text,
-                          cryptedPassword: passwordController.text));
+                      // await client.setIdentity(IdentityData(
+                      //     hostname: computerNameController.text,
+                      //     realname: realNameController.text,
+                      //     username: usernameController.text,
+                      //     cryptedPassword: passwordController.text));
 
                       Navigator.pushNamed(context, Routes.chooseYourLook);
                     }

@@ -259,11 +259,13 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                   builder: (context, value, child) {
                                     return Padding(
                                       padding: const EdgeInsets.all(10.0),
-                                      child:
-                                          value.text != _passwordController.text
-                                              ? Text('')
-                                              : Icon(Icons.check_circle,
-                                                  color: yaru.Colors.green),
+                                      child: value.text !=
+                                                  _passwordController.text ||
+                                              !_passwordValidator
+                                                  .isValid(value.text)
+                                          ? Text('')
+                                          : Icon(Icons.check_circle,
+                                              color: yaru.Colors.green),
                                     );
                                   })
                             ],

@@ -19,23 +19,21 @@ class WhoAreYouPage extends StatefulWidget {
 enum LoginStrategy { REQUIRE_PASSWORD, AUTO_LOGIN }
 
 class _WhoAreYouPageState extends State<WhoAreYouPage> {
-  late LoginStrategy loginStrategy;
-  late TextEditingController realNameController;
-  late TextEditingController computerNameController;
-  late TextEditingController usernameController;
-  late TextEditingController passwordController;
-  late TextEditingController confirmPasswordController;
-  late String password;
+  late LoginStrategy _loginStrategy;
+  late TextEditingController _realNameController;
+  late TextEditingController _computerNameController;
+  late TextEditingController _usernameController;
+  late TextEditingController _passwordController;
+  late TextEditingController _confirmPasswordController;
 
   @override
   void initState() {
-    realNameController = TextEditingController();
-    computerNameController = TextEditingController();
-    usernameController = TextEditingController();
-    passwordController = TextEditingController();
-    confirmPasswordController = TextEditingController();
-    password = passwordController.text;
-    loginStrategy = LoginStrategy.REQUIRE_PASSWORD;
+    _realNameController = TextEditingController();
+    _computerNameController = TextEditingController();
+    _usernameController = TextEditingController();
+    _passwordController = TextEditingController();
+    _confirmPasswordController = TextEditingController();
+    _loginStrategy = LoginStrategy.REQUIRE_PASSWORD;
     super.initState();
   }
 
@@ -64,13 +62,13 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
           errorText: 'invalid username')
     ]);
 
+    final _realNameValidator = RequiredValidator(errorText: 'name is required');
+
     final _usernameFormKey = GlobalKey<FormState>();
     final _nameFormKey = GlobalKey<FormState>();
     final _computerNameFormKey = GlobalKey<FormState>();
     final _passwordFormKey = GlobalKey<FormState>();
     final _confirmPasswordFormKey = GlobalKey<FormState>();
-
-    var _passwordValidated = false;
 
     return LocalizedView(
         builder: (context, lang) => WizardPage(
@@ -90,10 +88,9 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                               key: _nameFormKey,
                               child: TextFormField(
                                 autofocus: true,
-                                validator: RequiredValidator(
-                                    errorText: 'name is required'),
+                                validator: _realNameValidator,
                                 autovalidateMode: AutovalidateMode.always,
-                                controller: realNameController,
+                                controller: _realNameController,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'Your name'),
@@ -101,14 +98,17 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: _nameFormKey.currentState == null ||
-                                  !_nameFormKey.currentState!.validate()
-                              ? Text('')
-                              : Icon(Icons.check_circle,
-                                  color: yaru.Colors.green),
-                        )
+                        ValueListenableBuilder<TextEditingValue>(
+                            valueListenable: _realNameController,
+                            builder: (context, value, child) {
+                              return Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: !_realNameValidator.isValid(value.text)
+                                    ? Text('')
+                                    : Icon(Icons.check_circle,
+                                        color: yaru.Colors.green),
+                              );
+                            })
                       ],
                     ),
                     Row(
@@ -123,13 +123,13 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                               child: TextFormField(
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
-                                controller: computerNameController,
+                                controller: _computerNameController,
                                 validator: _computerNameValidator,
                                 decoration: InputDecoration(
                                     suffix: Text(
                                       'The name it uses when it talks to other computers.',
                                       style:
-                                          Theme.of(context).textTheme.bodyText2,
+                                          Theme.of(context).textTheme.caption,
                                     ),
                                     border: OutlineInputBorder(),
                                     labelText: 'Your Computers name'),
@@ -137,14 +137,18 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: _computerNameFormKey.currentState == null ||
-                                  !_computerNameFormKey.currentState!.validate()
-                              ? Text('')
-                              : Icon(Icons.check_circle,
-                                  color: yaru.Colors.green),
-                        )
+                        ValueListenableBuilder<TextEditingValue>(
+                            valueListenable: _computerNameController,
+                            builder: (context, value, child) {
+                              return Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child:
+                                    !_computerNameValidator.isValid(value.text)
+                                        ? Text('')
+                                        : Icon(Icons.check_circle,
+                                            color: yaru.Colors.green),
+                              );
+                            })
                       ],
                     ),
                     Row(
@@ -159,7 +163,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                               child: TextFormField(
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
-                                controller: usernameController,
+                                controller: _usernameController,
                                 validator: _usernameValidator,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
@@ -168,17 +172,20 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: _usernameFormKey.currentState == null ||
-                                  !_usernameFormKey.currentState!.validate()
-                              ? Text('')
-                              : Icon(Icons.check_circle,
-                                  color: yaru.Colors.green),
-                        )
+                        ValueListenableBuilder<TextEditingValue>(
+                            valueListenable: _usernameController,
+                            builder: (context, value, child) {
+                              return Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: !_usernameValidator.isValid(value.text)
+                                    ? Text('')
+                                    : Icon(Icons.check_circle,
+                                        color: yaru.Colors.green),
+                              );
+                            })
                       ],
                     ),
-                    loginStrategy == LoginStrategy.REQUIRE_PASSWORD
+                    _loginStrategy == LoginStrategy.REQUIRE_PASSWORD
                         ? Row(
                             children: [
                               Padding(
@@ -193,7 +200,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                       autovalidateMode:
                                           AutovalidateMode.onUserInteraction,
                                       validator: _passwordValidator,
-                                      controller: passwordController,
+                                      controller: _passwordController,
                                       obscureText: true,
                                       decoration: InputDecoration(
                                           border: OutlineInputBorder(),
@@ -203,7 +210,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                 ),
                               ),
                               ValueListenableBuilder<TextEditingValue>(
-                                  valueListenable: passwordController,
+                                  valueListenable: _passwordController,
                                   builder: (context, value, child) {
                                     return Padding(
                                       padding: const EdgeInsets.all(10.0),
@@ -217,7 +224,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                             ],
                           )
                         : Padding(padding: EdgeInsets.all(1)),
-                    loginStrategy == LoginStrategy.REQUIRE_PASSWORD
+                    _loginStrategy == LoginStrategy.REQUIRE_PASSWORD
                         ? Row(
                             children: [
                               Padding(
@@ -231,11 +238,14 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                     child: TextFormField(
                                       autovalidateMode:
                                           AutovalidateMode.onUserInteraction,
-                                      controller: confirmPasswordController,
-                                      validator: (val) => MatchValidator(
-                                              errorText:
-                                                  'passwords do not match')
-                                          .validateMatch(val!, password),
+                                      controller: _confirmPasswordController,
+                                      validator: (val) {
+                                        return MatchValidator(
+                                                errorText:
+                                                    'passwords do not match')
+                                            .validateMatch(
+                                                val!, _passwordController.text);
+                                      },
                                       obscureText: true,
                                       decoration: InputDecoration(
                                           border: OutlineInputBorder(),
@@ -244,16 +254,18 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: _confirmPasswordFormKey.currentState ==
-                                            null ||
-                                        !_confirmPasswordFormKey.currentState!
-                                            .validate()
-                                    ? Text('')
-                                    : Icon(Icons.check_circle,
-                                        color: yaru.Colors.green),
-                              )
+                              ValueListenableBuilder<TextEditingValue>(
+                                  valueListenable: _confirmPasswordController,
+                                  builder: (context, value, child) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child:
+                                          value.text != _passwordController.text
+                                              ? Text('')
+                                              : Icon(Icons.check_circle,
+                                                  color: yaru.Colors.green),
+                                    );
+                                  })
                             ],
                           )
                         : Padding(padding: EdgeInsets.all(1)),
@@ -261,9 +273,9 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                       children: [
                         Radio<LoginStrategy>(
                             value: LoginStrategy.AUTO_LOGIN,
-                            groupValue: loginStrategy,
+                            groupValue: _loginStrategy,
                             onChanged: (_) => setState(() {
-                                  loginStrategy = LoginStrategy.AUTO_LOGIN;
+                                  _loginStrategy = LoginStrategy.AUTO_LOGIN;
                                 })),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -275,9 +287,9 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                       children: [
                         Radio<LoginStrategy>(
                             value: LoginStrategy.REQUIRE_PASSWORD,
-                            groupValue: loginStrategy,
+                            groupValue: _loginStrategy,
                             onChanged: (_) => setState(() {
-                                  loginStrategy =
+                                  _loginStrategy =
                                       LoginStrategy.REQUIRE_PASSWORD;
                                 })),
                         Padding(

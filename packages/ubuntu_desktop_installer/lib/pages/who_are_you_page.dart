@@ -202,15 +202,18 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: _passwordFormKey.currentState == null ||
-                                        !_passwordFormKey.currentState!
-                                            .validate()
-                                    ? Text('')
-                                    : Icon(Icons.check_circle,
-                                        color: yaru.Colors.green),
-                              )
+                              ValueListenableBuilder<TextEditingValue>(
+                                  valueListenable: passwordController,
+                                  builder: (context, value, child) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: !_passwordValidator
+                                              .isValid(value.text)
+                                          ? Text('')
+                                          : Icon(Icons.check_circle,
+                                              color: yaru.Colors.green),
+                                    );
+                                  }),
                             ],
                           )
                         : Padding(padding: EdgeInsets.all(1)),

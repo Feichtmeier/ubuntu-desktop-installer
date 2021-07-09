@@ -1,13 +1,13 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:provider/provider.dart';
 import 'package:subiquity_client/subiquity_client.dart';
-import 'package:ubuntu_desktop_installer/pages/wizard_page.dart';
-import 'package:ubuntu_desktop_installer/widgets/localized_view.dart';
 import 'package:yaru/yaru.dart' as yaru;
 
 import '../routes.dart';
+import '../widgets/localized_view.dart';
+import 'wizard_page.dart';
 
 class WhoAreYouPage extends StatefulWidget {
   const WhoAreYouPage({Key? key}) : super(key: key);
@@ -62,7 +62,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
           errorText: 'invalid username')
     ]);
 
-    final _realNameValidator = RequiredValidator(errorText: 'name is required');
+    final _nameValidator = RequiredValidator(errorText: 'name is required');
 
     final _usernameFormKey = GlobalKey<FormState>();
     final _nameFormKey = GlobalKey<FormState>();
@@ -88,7 +88,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                               key: _nameFormKey,
                               child: TextFormField(
                                 autofocus: true,
-                                validator: _realNameValidator,
+                                validator: _nameValidator,
                                 autovalidateMode: AutovalidateMode.always,
                                 controller: _realNameController,
                                 decoration: InputDecoration(
@@ -103,7 +103,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                             builder: (context, value, child) {
                               return Padding(
                                 padding: const EdgeInsets.all(10.0),
-                                child: !_realNameValidator.isValid(value.text)
+                                child: !_nameValidator.isValid(value.text)
                                     ? Text('')
                                     : Icon(Icons.check_circle,
                                         color: yaru.Colors.green),
@@ -317,14 +317,21 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                         _usernameFormKey.currentState!.validate() &&
                         _passwordFormKey.currentState!.validate() &&
                         _confirmPasswordFormKey.currentState!.validate()) {
-                      // final client =
-                      //     Provider.of<SubiquityClient>(context, listen: false);
+                      final client =
+                          Provider.of<SubiquityClient>(context, listen: false);
 
-                      // await client.setIdentity(IdentityData(
-                      //     hostname: computerNameController.text,
-                      //     realname: realNameController.text,
-                      //     username: usernameController.text,
-                      //     cryptedPassword: passwordController.text));
+                      final key = encrypt.Key.fromLength(32);
+                      final iv = encrypt.IV.fromLength(16);
+                      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+
+                      final encrypted =
+                          encrypter.encrypt(_passwordController.text, iv: iv);
+
+                      await client.setIdentity(IdentityData(
+                          hostname: _computerNameController.text,
+                          realname: _realNameController.text,
+                          username: _usernameController.text,
+                          cryptedPassword: encrypted.toString()));
 
                       Navigator.pushNamed(context, Routes.chooseYourLook);
                     }

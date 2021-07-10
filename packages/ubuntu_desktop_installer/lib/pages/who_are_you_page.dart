@@ -165,7 +165,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                     Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 18),
+                          padding: const EdgeInsets.only(top: 10, bottom: 15),
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width /
                                 _screenFactor,
@@ -196,92 +196,82 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                             })
                       ],
                     ),
-                    _loginStrategy == LoginStrategy.REQUIRE_PASSWORD
-                        ? Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 10, bottom: 10),
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width /
-                                      _screenFactor,
-                                  child: Form(
-                                    key: _passwordFormKey,
-                                    child: TextFormField(
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      validator: _passwordValidator,
-                                      controller: _passwordController,
-                                      obscureText: true,
-                                      decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          labelText: 'Choose a password'),
-                                    ),
-                                  ),
-                                ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10, bottom: 10),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width /
+                                _screenFactor,
+                            child: Form(
+                              key: _passwordFormKey,
+                              child: TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: _passwordValidator,
+                                controller: _passwordController,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Choose a password'),
                               ),
-                              ValueListenableBuilder<TextEditingValue>(
-                                  valueListenable: _passwordController,
-                                  builder: (context, value, child) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: !_passwordValidator
-                                              .isValid(value.text)
-                                          ? Text('')
-                                          : Icon(Icons.check_circle,
-                                              color: yaru.Colors.green),
-                                    );
-                                  }),
-                            ],
-                          )
-                        : Padding(padding: EdgeInsets.all(1)),
-                    _loginStrategy == LoginStrategy.REQUIRE_PASSWORD
-                        ? Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 10, bottom: 18),
-                                child: SizedBox(
-                                  width: MediaQuery.of(context).size.width /
-                                      _screenFactor,
-                                  child: Form(
-                                    key: _confirmPasswordFormKey,
-                                    child: TextFormField(
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      controller: _confirmPasswordController,
-                                      validator: (val) {
-                                        return MatchValidator(
-                                                errorText:
-                                                    'passwords do not match')
-                                            .validateMatch(
-                                                val!, _passwordController.text);
-                                      },
-                                      obscureText: true,
-                                      decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          labelText: 'Confirm your password'),
-                                    ),
-                                  ),
-                                ),
+                            ),
+                          ),
+                        ),
+                        ValueListenableBuilder<TextEditingValue>(
+                            valueListenable: _passwordController,
+                            builder: (context, value, child) {
+                              return Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: !_passwordValidator.isValid(value.text)
+                                    ? Text('')
+                                    : Icon(Icons.check_circle,
+                                        color: yaru.Colors.green),
+                              );
+                            }),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10, bottom: 18),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width /
+                                _screenFactor,
+                            child: Form(
+                              key: _confirmPasswordFormKey,
+                              child: TextFormField(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                controller: _confirmPasswordController,
+                                validator: (val) {
+                                  return MatchValidator(
+                                          errorText: 'passwords do not match')
+                                      .validateMatch(
+                                          val!, _passwordController.text);
+                                },
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Confirm your password'),
                               ),
-                              ValueListenableBuilder<TextEditingValue>(
-                                  valueListenable: _confirmPasswordController,
-                                  builder: (context, value, child) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: value.text !=
-                                                  _passwordController.text ||
-                                              !_passwordValidator
-                                                  .isValid(value.text)
-                                          ? Text('')
-                                          : Icon(Icons.check_circle,
-                                              color: yaru.Colors.green),
-                                    );
-                                  })
-                            ],
-                          )
-                        : Padding(padding: EdgeInsets.all(1)),
+                            ),
+                          ),
+                        ),
+                        ValueListenableBuilder<TextEditingValue>(
+                            valueListenable: _confirmPasswordController,
+                            builder: (context, value, child) {
+                              return Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: value.text != _passwordController.text ||
+                                        !_passwordValidator.isValid(value.text)
+                                    ? Text('')
+                                    : Icon(Icons.check_circle,
+                                        color: yaru.Colors.green),
+                              );
+                            })
+                      ],
+                    ),
                     Row(
                       children: [
                         Radio<LoginStrategy>(

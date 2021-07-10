@@ -25,6 +25,16 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
   late TextEditingController _usernameController;
   late TextEditingController _passwordController;
   late TextEditingController _confirmPasswordController;
+  late RequiredValidator _realNameValidator;
+  late PatternValidator _computerNameValidator;
+  late MultiValidator _usernameValidator;
+  late MultiValidator _passwordValidator;
+
+  final _usernameFormKey = GlobalKey<FormState>();
+  final _realNameFormKey = GlobalKey<FormState>();
+  final _computerNameFormKey = GlobalKey<FormState>();
+  final _passwordFormKey = GlobalKey<FormState>();
+  final _confirmPasswordFormKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -33,27 +43,11 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
     _usernameController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
-    _loginStrategy = LoginStrategy.REQUIRE_PASSWORD;
-    super.initState();
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    const _screenFactor = 1.6;
-
-    final _passwordValidator = MultiValidator([
-      RequiredValidator(errorText: 'password is required'),
-      MinLengthValidator(8,
-          errorText: 'password must be at least 8 digits long'),
-      PatternValidator(r'(?=.*?[#?!@$%^&*-])',
-          errorText: 'passwords must have at least one special character')
-    ]);
-
-    final _computerNameValidator = PatternValidator(
-        r'(?!-)[A-Z\d-]{1,63}(?<!-)$',
+    _realNameValidator = RequiredValidator(errorText: 'name is required');
+    _computerNameValidator = PatternValidator(r'(?!-)[A-Z\d-]{1,63}(?<!-)$',
         errorText: 'Invalid computer name');
-
-    final _usernameValidator = MultiValidator([
+    _usernameValidator = MultiValidator([
       RequiredValidator(errorText: 'username is required'),
       MinLengthValidator(2,
           errorText: 'username must be at least 2 digits long'),
@@ -61,14 +55,22 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
           r'^(?=.{2,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$',
           errorText: 'invalid username')
     ]);
+    _passwordValidator = MultiValidator([
+      RequiredValidator(errorText: 'password is required'),
+      MinLengthValidator(8,
+          errorText: 'password must be at least 8 digits long'),
+      PatternValidator(r'(?=.*?[#?!@$%^&*-])',
+          errorText: 'passwords must have at least one special character')
+    ]);
 
-    final _nameValidator = RequiredValidator(errorText: 'name is required');
+    _loginStrategy = LoginStrategy.REQUIRE_PASSWORD;
+    super.initState();
+  }
 
-    final _usernameFormKey = GlobalKey<FormState>();
-    final _nameFormKey = GlobalKey<FormState>();
-    final _computerNameFormKey = GlobalKey<FormState>();
-    final _passwordFormKey = GlobalKey<FormState>();
-    final _confirmPasswordFormKey = GlobalKey<FormState>();
+  @override
+  Widget build(BuildContext context) {
+    const _screenFactor = 1.6;
+    const checkMarksLeftPadding = 10.0;
 
     return LocalizedView(
         builder: (context, lang) => WizardPage(
@@ -77,18 +79,18 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 10),
-                          child: SizedBox(
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Row(
+                        children: [
+                          SizedBox(
                             width: MediaQuery.of(context).size.width /
                                 _screenFactor,
                             child: Form(
-                              key: _nameFormKey,
+                              key: _realNameFormKey,
                               child: TextFormField(
                                 autofocus: true,
-                                validator: _nameValidator,
+                                validator: _realNameValidator,
                                 autovalidateMode: AutovalidateMode.always,
                                 controller: _realNameController,
                                 decoration: InputDecoration(
@@ -97,25 +99,26 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                               ),
                             ),
                           ),
-                        ),
-                        ValueListenableBuilder<TextEditingValue>(
-                            valueListenable: _realNameController,
-                            builder: (context, value, child) {
-                              return Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: !_nameValidator.isValid(value.text)
-                                    ? Text('')
-                                    : Icon(Icons.check_circle,
-                                        color: yaru.Colors.green),
-                              );
-                            })
-                      ],
+                          ValueListenableBuilder<TextEditingValue>(
+                              valueListenable: _realNameController,
+                              builder: (context, value, child) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: checkMarksLeftPadding),
+                                  child: !_realNameValidator.isValid(value.text)
+                                      ? Text('')
+                                      : Icon(Icons.check_circle,
+                                          color: yaru.Colors.green),
+                                );
+                              })
+                        ],
+                      ),
                     ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 10),
-                          child: SizedBox(
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Row(
+                        children: [
+                          SizedBox(
                             width: MediaQuery.of(context).size.width /
                                 _screenFactor,
                             child: Form(
@@ -136,20 +139,21 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                               ),
                             ),
                           ),
-                        ),
-                        ValueListenableBuilder<TextEditingValue>(
-                            valueListenable: _computerNameController,
-                            builder: (context, value, child) {
-                              return Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child:
-                                    !_computerNameValidator.isValid(value.text)
-                                        ? Text('')
-                                        : Icon(Icons.check_circle,
-                                            color: yaru.Colors.green),
-                              );
-                            })
-                      ],
+                          ValueListenableBuilder<TextEditingValue>(
+                              valueListenable: _computerNameController,
+                              builder: (context, value, child) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: checkMarksLeftPadding),
+                                  child: !_computerNameValidator
+                                          .isValid(value.text)
+                                      ? Text('')
+                                      : Icon(Icons.check_circle,
+                                          color: yaru.Colors.green),
+                                );
+                              })
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 15),
@@ -162,11 +166,11 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                         ),
                       ),
                     ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 15),
-                          child: SizedBox(
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Row(
+                        children: [
+                          SizedBox(
                             width: MediaQuery.of(context).size.width /
                                 _screenFactor,
                             child: Form(
@@ -182,25 +186,26 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                               ),
                             ),
                           ),
-                        ),
-                        ValueListenableBuilder<TextEditingValue>(
-                            valueListenable: _usernameController,
-                            builder: (context, value, child) {
-                              return Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: !_usernameValidator.isValid(value.text)
-                                    ? Text('')
-                                    : Icon(Icons.check_circle,
-                                        color: yaru.Colors.green),
-                              );
-                            })
-                      ],
+                          ValueListenableBuilder<TextEditingValue>(
+                              valueListenable: _usernameController,
+                              builder: (context, value, child) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: checkMarksLeftPadding),
+                                  child: !_usernameValidator.isValid(value.text)
+                                      ? Text('')
+                                      : Icon(Icons.check_circle,
+                                          color: yaru.Colors.green),
+                                );
+                              })
+                        ],
+                      ),
                     ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 10),
-                          child: SizedBox(
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Row(
+                        children: [
+                          SizedBox(
                             width: MediaQuery.of(context).size.width /
                                 _screenFactor,
                             child: Form(
@@ -217,25 +222,26 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                               ),
                             ),
                           ),
-                        ),
-                        ValueListenableBuilder<TextEditingValue>(
-                            valueListenable: _passwordController,
-                            builder: (context, value, child) {
-                              return Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: !_passwordValidator.isValid(value.text)
-                                    ? Text('')
-                                    : Icon(Icons.check_circle,
-                                        color: yaru.Colors.green),
-                              );
-                            }),
-                      ],
+                          ValueListenableBuilder<TextEditingValue>(
+                              valueListenable: _passwordController,
+                              builder: (context, value, child) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: checkMarksLeftPadding),
+                                  child: !_passwordValidator.isValid(value.text)
+                                      ? Text('')
+                                      : Icon(Icons.check_circle,
+                                          color: yaru.Colors.green),
+                                );
+                              }),
+                        ],
+                      ),
                     ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 18),
-                          child: SizedBox(
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: Row(
+                        children: [
+                          SizedBox(
                             width: MediaQuery.of(context).size.width /
                                 _screenFactor,
                             child: Form(
@@ -257,20 +263,23 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                               ),
                             ),
                           ),
-                        ),
-                        ValueListenableBuilder<TextEditingValue>(
-                            valueListenable: _confirmPasswordController,
-                            builder: (context, value, child) {
-                              return Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: value.text != _passwordController.text ||
-                                        !_passwordValidator.isValid(value.text)
-                                    ? Text('')
-                                    : Icon(Icons.check_circle,
-                                        color: yaru.Colors.green),
-                              );
-                            })
-                      ],
+                          ValueListenableBuilder<TextEditingValue>(
+                              valueListenable: _confirmPasswordController,
+                              builder: (context, value, child) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: checkMarksLeftPadding),
+                                  child:
+                                      value.text != _passwordController.text ||
+                                              !_passwordValidator
+                                                  .isValid(value.text)
+                                          ? Text('')
+                                          : Icon(Icons.check_circle,
+                                              color: yaru.Colors.green),
+                                );
+                              })
+                        ],
+                      ),
                     ),
                     Row(
                       children: [
@@ -313,7 +322,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                   label: lang.startInstallingButtonText,
                   highlighted: true,
                   onActivated: () async {
-                    if (_nameFormKey.currentState!.validate() &&
+                    if (_realNameFormKey.currentState!.validate() &&
                         _computerNameFormKey.currentState!.validate() &&
                         _usernameFormKey.currentState!.validate() &&
                         _passwordFormKey.currentState!.validate() &&

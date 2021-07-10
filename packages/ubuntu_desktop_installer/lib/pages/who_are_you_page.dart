@@ -151,10 +151,21 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                             })
                       ],
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 15),
+                      child: SizedBox(
+                        width:
+                            MediaQuery.of(context).size.width / _screenFactor,
+                        child: Text(
+                          'The name it uses when it talks to other computers.',
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                      ),
+                    ),
                     Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 10),
+                          padding: const EdgeInsets.only(top: 10, bottom: 18),
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width /
                                 _screenFactor,
@@ -229,7 +240,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                             children: [
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(top: 10, bottom: 10),
+                                    const EdgeInsets.only(top: 10, bottom: 18),
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width /
                                       _screenFactor,

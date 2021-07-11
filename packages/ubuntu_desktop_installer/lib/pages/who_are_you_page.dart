@@ -21,7 +21,7 @@ class WhoAreYouPage extends StatefulWidget {
   _WhoAreYouPageState createState() => _WhoAreYouPageState();
 }
 
-/// An enum for storing the logn strategy.
+/// An enum for storing the login strategy.
 enum LoginStrategy {
   /// If selected can be used for the representation
   /// of the user preference to always entering the password
@@ -88,11 +88,10 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
   }
 
   Widget findPassWordStrengthLabel(String value) {
-    final _strongPattenPasswordValidator = PatternValidator(
-        r'(?=.*?[#?!@$%^&*-])',
-        errorText: 'passwords must have at least one special character');
+    final _strongPattenPasswordValidator =
+        PatternValidator(r'(?=.*?[#?!@$%^&*-])', errorText: '');
     final _goodPatternPasswordValidator =
-        PatternValidator(r'(^.*(?=.{6,})(?=.*\d).*$)', errorText: 'errorText');
+        PatternValidator(r'(^.*(?=.{6,})(?=.*\d).*$)', errorText: '');
     if (_strongPattenPasswordValidator.isValid(value)) {
       return Text('Strong password',
           style: TextStyle(

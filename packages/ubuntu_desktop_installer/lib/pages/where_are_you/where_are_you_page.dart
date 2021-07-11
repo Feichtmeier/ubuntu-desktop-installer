@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:subiquity_client/subiquity_client.dart';
 import 'country.dart';
 
 import '../../widgets.dart';
@@ -26,14 +28,45 @@ class _WhereAreYouPageState extends State<WhereAreYouPage> {
   }
 
   @override
+  void initState() {
+    final client = Provider.of<SubiquityClient>(context, listen: false);
+    // client.
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final _factor = MediaQuery.of(context).size.width / 12;
     getCountries();
     return LocalizedView(
         builder: (context, lang) => WizardPage(
               title: Text('Where are you currently?'),
-              content: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              content: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(
+                        bottom: _factor, left: _factor / 3, right: _factor),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width / 2.7,
+                      child: Autocomplete<String>(
+                        optionsBuilder: (textEditingValue) {
+                          if (textEditingValue.text == '') {
+                            return const Iterable<String>.empty();
+                          }
+                          return _countries
+                              .map((e) => e.city.toString())
+                              .toList()
+                              .where((option) {
+                            return option
+                                .toLowerCase()
+                                .contains(textEditingValue.text.toLowerCase());
+                          });
+                        },
+                        onSelected: print,
+                      ),
+                    ),
+                  ),
                   Expanded(
                     child: FutureBuilder<List<Country>>(
                       builder: (context, snapshot) {
@@ -54,25 +87,6 @@ class _WhereAreYouPageState extends State<WhereAreYouPage> {
                       future: getCountries(),
                     ),
                   ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 3,
-                    child: Autocomplete<String>(
-                      optionsBuilder: (textEditingValue) {
-                        if (textEditingValue.text == '') {
-                          return const Iterable<String>.empty();
-                        }
-                        return _countries
-                            .map((e) => e.city.toString())
-                            .toList()
-                            .where((option) {
-                          return option
-                              .toLowerCase()
-                              .contains(textEditingValue.text.toLowerCase());
-                        });
-                      },
-                      onSelected: print,
-                    ),
-                  ),
                 ],
               ),
               actions: <WizardAction>[
@@ -87,52 +101,5 @@ class _WhereAreYouPageState extends State<WhereAreYouPage> {
                 ),
               ],
             ));
-  }
-}
-
-void main() => runApp(const AutocompleteExampleApp());
-
-class AutocompleteExampleApp extends StatelessWidget {
-  const AutocompleteExampleApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Autocomplete Basic'),
-        ),
-        body: const Center(
-          child: AutocompleteBasicExample(),
-        ),
-      ),
-    );
-  }
-}
-
-class AutocompleteBasicExample extends StatelessWidget {
-  const AutocompleteBasicExample({Key? key}) : super(key: key);
-
-  static const List<String> _kOptions = <String>[
-    'aardvark',
-    'bobcat',
-    'chameleon',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Autocomplete<String>(
-      optionsBuilder: (textEditingValue) {
-        if (textEditingValue.text == '') {
-          return const Iterable<String>.empty();
-        }
-        return _kOptions.where((option) {
-          return option.contains(textEditingValue.text.toLowerCase());
-        });
-      },
-      onSelected: (selection) {
-        print('You just selected $selection');
-      },
-    );
   }
 }

@@ -76,6 +76,11 @@
   "whoAreYouPageTitle": "Who are you?",
   "@whoAreYouPageTitle": {},
 
+  "whoAreYouPageLoginStrategyAutoLogin": "Log in automatically",
+  "@whoAreYouPageLoginStrategyAutoLogin": {},
+  "whoAreYouPageLoginStrategyRequirePassword": "Require my password to log in",
+  "@whoAreYouPageLoginStrategyRequirePassword": {},
+
   "whoAreYouPageRealNameLabel": "Your name",
   "@whoAreYouPageRealNameLabel": {},
   "whoAreYouPageRealNameRequiredValidatorErrorText": "name is required",
@@ -103,6 +108,10 @@
 
   "whoAreYouPagePasswordLabel": "Choose a password",
   "@whoAreYouPagePasswordLabel": {},
+  "whoAreYouPagePasswordRequiredValidatorErrorText": "password is required",
+  "@whoAreYouPagePasswordRequiredValidatorErrorText": {},
+  "whoAreYouPagePasswordMinLengthValidatorErrorText": "password must be at least 2 digits long",
+  "@whoAreYouPagePasswordMinLengthValidatorErrorText": {},
   "whoAreYouPagePasswordWeakPasswordLabel": "Weak password",
   "@whoAreYouPagePasswordWeakPasswordLabel": {},
   "whoAreYouPagePasswordAveragePasswordLabel": "Average password",
@@ -112,6 +121,8 @@
 
   "whoAreYouPageConfirmPasswordLabel": "Confirm your password",
   "@whoAreYouPageConfirmPasswordLabel": {},
+  "whoAreYouPageConfirmPasswordValidatorErrorText": "passwords do not match",
+  "@whoAreYouPageConfirmPasswordValidatorErrorText": {},
 
   "keyboardLayoutPageTitle": "Keyboard layout",
   "@keyboardLayoutPageTitle": {},

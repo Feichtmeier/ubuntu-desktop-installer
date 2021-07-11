@@ -40,10 +40,6 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
   late TextEditingController _usernameController;
   late TextEditingController _passwordController;
   late TextEditingController _confirmPasswordController;
-  late MultiValidator _realNameValidator;
-  late MultiValidator _computerNameValidator;
-  late MultiValidator _usernameValidator;
-  late MultiValidator _passwordValidator;
 
   final _usernameFormKey = GlobalKey<FormState>();
   final _realNameFormKey = GlobalKey<FormState>();
@@ -59,52 +55,32 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
 
-    _realNameValidator = MultiValidator([
-      RequiredValidator(errorText: 'name is required'),
-      MinLengthValidator(2, errorText: 'name must be at least 2 digits long')
-    ]);
-    _computerNameValidator = MultiValidator([
-      RequiredValidator(errorText: 'computer name is required'),
-      MinLengthValidator(2,
-          errorText: 'computer name must be at least 2 digits long')
-    ]);
-    _usernameValidator = MultiValidator([
-      RequiredValidator(errorText: 'username is required'),
-      MinLengthValidator(2,
-          errorText: 'username must be at least 2 digits long'),
-      PatternValidator(
-          r'^(?=.{2,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$',
-          errorText: 'invalid username')
-    ]);
-
-    _passwordValidator = MultiValidator([
-      RequiredValidator(errorText: 'password is required'),
-      MinLengthValidator(2,
-          errorText: 'password must be at least 2 digits long'),
-    ]);
-
     _loginStrategy = LoginStrategy.REQUIRE_PASSWORD;
     super.initState();
   }
 
-  Widget findPassWordStrengthLabel(String value) {
+  Widget findPassWordStrengthLabel(String value, String weakPasswordLabel,
+      String averagePasswordLabel, String strongPasswordLabel) {
     final _strongPattenPasswordValidator =
         PatternValidator(r'(?=.*?[#?!@$%^&*-])', errorText: '');
     final _goodPatternPasswordValidator =
         PatternValidator(r'(^.*(?=.{6,})(?=.*\d).*$)', errorText: '');
     if (_strongPattenPasswordValidator.isValid(value)) {
-      return Text('Strong password',
+      return Text(strongPasswordLabel,
           style: TextStyle(
             color: yaru.Colors.green,
           ));
     } else if (_goodPatternPasswordValidator.isValid(value)) {
-      return Text('Good password',
+      return Text(averagePasswordLabel,
           style: TextStyle(
             color: yaru.Colors.orange,
           ));
     }
-    if (_passwordValidator.isValid(value)) {
-      return Text('Weak password',
+    if (MultiValidator([
+      RequiredValidator(errorText: ''),
+      MinLengthValidator(2, errorText: ''),
+    ]).isValid(value)) {
+      return Text(weakPasswordLabel,
           style: TextStyle(
             color: yaru.Colors.red,
           ));
@@ -121,7 +97,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
 
     return LocalizedView(
         builder: (context, lang) => WizardPage(
-              title: Text('Who are you?'),
+              title: Text(lang.whoAreYouPageTitle),
               content: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,16 +105,30 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                     ValidatedInput(
                       formKey: _realNameFormKey,
                       controller: _realNameController,
-                      validator: _realNameValidator,
-                      label: 'Your name',
+                      validator: MultiValidator([
+                        RequiredValidator(
+                            errorText: lang
+                                .whoAreYouPageRealNameRequiredValidatorErrorText),
+                        MinLengthValidator(2,
+                            errorText: lang
+                                .whoAreYouPageRealNameMinLengthValidatorErrorText)
+                      ]),
+                      label: lang.whoAreYouPageRealNameLabel,
                       obscureText: false,
                       successWidget: _successIcon,
                     ),
                     ValidatedInput(
                         formKey: _computerNameFormKey,
                         controller: _computerNameController,
-                        validator: _computerNameValidator,
-                        label: 'Your computers name',
+                        validator: MultiValidator([
+                          RequiredValidator(
+                              errorText: lang
+                                  .whoAreYouPageComputerNameRequiredValidatorErrorText),
+                          MinLengthValidator(2,
+                              errorText: lang
+                                  .whoAreYouPageComputerNameMinLengthValidatorErrorText)
+                        ]),
+                        label: lang.whoAreYouPageComputerNameLabel,
                         successWidget: _successIcon,
                         obscureText: false),
                     Padding(
@@ -147,7 +137,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                         width:
                             MediaQuery.of(context).size.width / _screenFactor,
                         child: Text(
-                          'The name it uses when it talks to other computers.',
+                          lang.whoAreYouPageComputerNameInfo,
                           style: Theme.of(context).textTheme.caption,
                         ),
                       ),
@@ -155,8 +145,19 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                     ValidatedInput(
                       formKey: _usernameFormKey,
                       controller: _usernameController,
-                      validator: _usernameValidator,
-                      label: 'Pick a username',
+                      validator: MultiValidator([
+                        RequiredValidator(
+                            errorText: lang
+                                .whoAreYouPageUsernameRequiredValidatorErrorText),
+                        MinLengthValidator(2,
+                            errorText: lang
+                                .whoAreYouPageUsernameMinLengthValidatorErrorText),
+                        PatternValidator(
+                            r'^(?=.{2,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$',
+                            errorText: lang
+                                .whoAreYouPageUsernamePatternValidatorErrorText)
+                      ]),
+                      label: lang.whoAreYouPageUsernameLabel,
                       obscureText: false,
                       successWidget: _successIcon,
                     ),
@@ -172,12 +173,19 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                               child: TextFormField(
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
-                                validator: _passwordValidator,
+                                validator: MultiValidator([
+                                  RequiredValidator(
+                                      errorText: lang
+                                          .whoAreYouPagePasswordRequiredValidatorErrorText),
+                                  MinLengthValidator(2,
+                                      errorText: lang
+                                          .whoAreYouPagePasswordMinLengthValidatorErrorText),
+                                ]),
                                 controller: _passwordController,
                                 obscureText: true,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
-                                    labelText: 'Choose a password'),
+                                    labelText: lang.whoAreYouPagePasswordLabel),
                               ),
                             ),
                           ),
@@ -187,8 +195,11 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                 return Padding(
                                     padding: const EdgeInsets.only(
                                         left: checkMarksLeftPadding),
-                                    child:
-                                        findPassWordStrengthLabel(value.text));
+                                    child: findPassWordStrengthLabel(
+                                        value.text,
+                                        lang.whoAreYouPagePasswordWeakPasswordLabel,
+                                        lang.whoAreYouPagePasswordAveragePasswordLabel,
+                                        lang.whoAreYouPagePasswordStrongPasswordLabel));
                               }),
                         ],
                       ),
@@ -208,14 +219,16 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                 controller: _confirmPasswordController,
                                 validator: (val) {
                                   return MatchValidator(
-                                          errorText: 'passwords do not match')
+                                          errorText: lang
+                                              .whoAreYouPageConfirmPasswordValidatorErrorText)
                                       .validateMatch(
                                           val!, _passwordController.text);
                                 },
                                 obscureText: true,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
-                                    labelText: 'Confirm your password'),
+                                    labelText:
+                                        lang.whoAreYouPageConfirmPasswordLabel),
                               ),
                             ),
                           ),
@@ -227,8 +240,14 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                       left: checkMarksLeftPadding),
                                   child:
                                       value.text != _passwordController.text ||
-                                              !_passwordValidator
-                                                  .isValid(value.text)
+                                              !MultiValidator([
+                                                RequiredValidator(
+                                                    errorText: lang
+                                                        .whoAreYouPagePasswordRequiredValidatorErrorText),
+                                                MinLengthValidator(2,
+                                                    errorText: lang
+                                                        .whoAreYouPagePasswordMinLengthValidatorErrorText),
+                                              ]).isValid(value.text)
                                           ? Text('')
                                           : _successIcon,
                                 );
@@ -246,7 +265,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                 })),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: const Text('Log in automatically'),
+                          child: Text(lang.whoAreYouPageLoginStrategyAutoLogin),
                         )
                       ],
                     ),
@@ -261,7 +280,8 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                 })),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: const Text('Require my password to log in'),
+                          child: Text(
+                              lang.whoAreYouPageLoginStrategyRequirePassword),
                         )
                       ],
                     ),

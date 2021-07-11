@@ -7,16 +7,31 @@ import 'package:yaru/yaru.dart' as yaru;
 
 import '../routes.dart';
 import '../widgets/localized_view.dart';
+import '../widgets/validated_input.dart';
 import 'wizard_page.dart';
 
+/// The installer page for setting up the user data.
+///
+/// It uses [WizardPage] and [WizardAction] to create an installer page.
 class WhoAreYouPage extends StatefulWidget {
+  /// Creates a the installer page for setting up the user data.
   const WhoAreYouPage({Key? key}) : super(key: key);
 
   @override
   _WhoAreYouPageState createState() => _WhoAreYouPageState();
 }
 
-enum LoginStrategy { REQUIRE_PASSWORD, AUTO_LOGIN }
+/// An enum for storing the logn strategy.
+enum LoginStrategy {
+  /// If selected can be used for the representation
+  /// of the user preference to always entering the password
+  /// at login.
+  REQUIRE_PASSWORD,
+
+  /// If selected can be used for the representation
+  /// of the user preference to log in without a password.
+  AUTO_LOGIN
+}
 
 class _WhoAreYouPageState extends State<WhoAreYouPage> {
   late LoginStrategy _loginStrategy;
@@ -29,30 +44,6 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
   late MultiValidator _computerNameValidator;
   late MultiValidator _usernameValidator;
   late MultiValidator _passwordValidator;
-
-  final _requiredPasswordValidator =
-      RequiredValidator(errorText: 'password is required');
-  final _minLengthPasswordValidator = MinLengthValidator(2,
-      errorText: 'password must be at least 2 digits long');
-  final _strongPattenPasswordValidator = PatternValidator(
-      r'(?=.*?[#?!@$%^&*-])',
-      errorText: 'passwords must have at least one special character');
-  final _goodPatternPasswordValidator =
-      PatternValidator(r'(^.*(?=.{6,})(?=.*\d).*$)', errorText: 'errorText');
-
-  final _successIcon = Icon(Icons.check_circle, color: yaru.Colors.green);
-  final _weakPasswordText = Text('Weak password',
-      style: TextStyle(
-        color: yaru.Colors.red,
-      ));
-  final _goodPasswordText = Text('Good password',
-      style: TextStyle(
-        color: yaru.Colors.orange,
-      ));
-  final _strongPasswordText = Text('Strong password',
-      style: TextStyle(
-        color: yaru.Colors.green,
-      ));
 
   final _usernameFormKey = GlobalKey<FormState>();
   final _realNameFormKey = GlobalKey<FormState>();
@@ -87,8 +78,9 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
     ]);
 
     _passwordValidator = MultiValidator([
-      _requiredPasswordValidator,
-      _minLengthPasswordValidator,
+      RequiredValidator(errorText: 'password is required'),
+      MinLengthValidator(2,
+          errorText: 'password must be at least 2 digits long'),
     ]);
 
     _loginStrategy = LoginStrategy.REQUIRE_PASSWORD;
@@ -96,13 +88,27 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
   }
 
   Widget findPassWordStrengthLabel(String value) {
+    final _strongPattenPasswordValidator = PatternValidator(
+        r'(?=.*?[#?!@$%^&*-])',
+        errorText: 'passwords must have at least one special character');
+    final _goodPatternPasswordValidator =
+        PatternValidator(r'(^.*(?=.{6,})(?=.*\d).*$)', errorText: 'errorText');
     if (_strongPattenPasswordValidator.isValid(value)) {
-      return _strongPasswordText;
+      return Text('Strong password',
+          style: TextStyle(
+            color: yaru.Colors.green,
+          ));
     } else if (_goodPatternPasswordValidator.isValid(value)) {
-      return _goodPasswordText;
+      return Text('Good password',
+          style: TextStyle(
+            color: yaru.Colors.orange,
+          ));
     }
     if (_passwordValidator.isValid(value)) {
-      return _weakPasswordText;
+      return Text('Weak password',
+          style: TextStyle(
+            color: yaru.Colors.red,
+          ));
     }
 
     return Text('');
@@ -112,6 +118,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
   Widget build(BuildContext context) {
     const _screenFactor = 1.6;
     const checkMarksLeftPadding = 10.0;
+    final _successIcon = Icon(Icons.check_circle, color: yaru.Colors.green);
 
     return LocalizedView(
         builder: (context, lang) => WizardPage(
@@ -120,7 +127,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    WhoAreYouInput(
+                    ValidatedInput(
                       formKey: _realNameFormKey,
                       controller: _realNameController,
                       validator: _realNameValidator,
@@ -128,7 +135,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                       obscureText: false,
                       successWidget: _successIcon,
                     ),
-                    WhoAreYouInput(
+                    ValidatedInput(
                         formKey: _computerNameFormKey,
                         controller: _computerNameController,
                         validator: _computerNameValidator,
@@ -146,7 +153,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                         ),
                       ),
                     ),
-                    WhoAreYouInput(
+                    ValidatedInput(
                       formKey: _usernameFormKey,
                       controller: _usernameController,
                       validator: _usernameValidator,
@@ -224,8 +231,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                               !_passwordValidator
                                                   .isValid(value.text)
                                           ? Text('')
-                                          : Icon(Icons.check_circle,
-                                              color: yaru.Colors.green),
+                                          : _successIcon,
                                 );
                               })
                         ],
@@ -299,58 +305,5 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                 ),
               ],
             ));
-  }
-}
-
-class WhoAreYouInput extends StatelessWidget {
-  final GlobalKey<FormState> formKey;
-  final TextEditingController controller;
-  final FieldValidator<String?> validator;
-  final String label;
-  final bool obscureText;
-  final Widget successWidget;
-
-  WhoAreYouInput(
-      {Key? key,
-      required this.formKey,
-      required this.controller,
-      required this.validator,
-      required this.label,
-      required this.obscureText,
-      required this.successWidget})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10, bottom: 10),
-      child: Row(
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 1.6,
-            child: Form(
-              key: formKey,
-              child: TextFormField(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                controller: controller,
-                validator: validator,
-                obscureText: obscureText,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: label),
-              ),
-            ),
-          ),
-          ValueListenableBuilder<TextEditingValue>(
-              valueListenable: controller,
-              builder: (context, value, child) {
-                return Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: !validator.isValid(value.text)
-                        ? Text('')
-                        : successWidget);
-              })
-        ],
-      ),
-    );
   }
 }

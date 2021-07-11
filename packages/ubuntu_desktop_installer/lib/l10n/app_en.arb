@@ -73,6 +73,40 @@
   "welcome": "Welcome",
   "@welcome": {},
 
+  "keyboardLayoutPageTitle": "Keyboard layout",
+  "@keyboardLayoutPageTitle": {},
+
+  "chooseYourKeyboardLayout": "Choose your keyboard layout:",
+  "@chooseYourKeyboardLayout": {},
+
+  "typeToTest": "Type here to test your keyboard",
+  "@typeToTest": {},
+
+  "detectLayout": "Detect Keyboard Layout",
+  "@detectLayout": {},
+
+  "updatesOtherSoftwarePageTitle": "Updates and other software",
+  "updatesOtherSoftwarePageDescription": "What apps would you like to install to start with?",
+
+  "normalInstallationTitle": "Normal installation",
+  "normalInstallationSubtitle": "Web browser, utilities, office software, games and media players.",
+  "minimalInstallationTitle": "Minimal installation",
+  "minimalInstallationSubtitle": "Web browser and basic utilities.",
+  "otherOptions": "Other options",
+  "installThirdPartyTitle": "Install third-party software for graphics and Wi-Fi hardware, as well as additional media formats",
+  "installThirdPartySubtitle": "This software is subject to license terms included with its documentation. Some is proprietary.",
+
+  "allocateDiskSpace": "Allocate disk space",
+  "startInstallingButtonText": "Start Installing",
+  "diskHeadersDevice": "Device",
+  "diskHeadersType": "Type",
+  "diskHeadersMountPoint": "Mount point",
+  "diskHeadersSize": "Size",
+  "diskHeadersUsed": "Used",
+  "diskHeadersSystem": "System",
+  "diskHeadersFormat": "Format",
+
+
   "whoAreYouPageTitle": "Who are you?",
   "@whoAreYouPageTitle": {},
 
@@ -123,39 +157,6 @@
   "@whoAreYouPageConfirmPasswordLabel": {},
   "whoAreYouPageConfirmPasswordValidatorErrorText": "passwords do not match",
   "@whoAreYouPageConfirmPasswordValidatorErrorText": {},
-
-  "keyboardLayoutPageTitle": "Keyboard layout",
-  "@keyboardLayoutPageTitle": {},
-
-  "chooseYourKeyboardLayout": "Choose your keyboard layout:",
-  "@chooseYourKeyboardLayout": {},
-
-  "typeToTest": "Type here to test your keyboard",
-  "@typeToTest": {},
-
-  "detectLayout": "Detect Keyboard Layout",
-  "@detectLayout": {},
-
-  "updatesOtherSoftwarePageTitle": "Updates and other software",
-  "updatesOtherSoftwarePageDescription": "What apps would you like to install to start with?",
-
-  "normalInstallationTitle": "Normal installation",
-  "normalInstallationSubtitle": "Web browser, utilities, office software, games and media players.",
-  "minimalInstallationTitle": "Minimal installation",
-  "minimalInstallationSubtitle": "Web browser and basic utilities.",
-  "otherOptions": "Other options",
-  "installThirdPartyTitle": "Install third-party software for graphics and Wi-Fi hardware, as well as additional media formats",
-  "installThirdPartySubtitle": "This software is subject to license terms included with its documentation. Some is proprietary.",
-
-  "allocateDiskSpace": "Allocate disk space",
-  "startInstallingButtonText": "Start Installing",
-  "diskHeadersDevice": "Device",
-  "diskHeadersType": "Type",
-  "diskHeadersMountPoint": "Mount point",
-  "diskHeadersSize": "Size",
-  "diskHeadersUsed": "Used",
-  "diskHeadersSystem": "System",
-  "diskHeadersFormat": "Format",
 
   "writeChangesToDisk": "Write changes to disk",
   "writeChangesDescription": "If you continue, the changes listed below will be written to the disks. You will be able to make further changes manually.",

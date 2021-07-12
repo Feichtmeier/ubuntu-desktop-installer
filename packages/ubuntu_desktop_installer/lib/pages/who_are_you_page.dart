@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:provider/provider.dart';
 import 'package:subiquity_client/subiquity_client.dart';
-import 'package:yaru/yaru.dart' as yaru;
 
 import '../routes.dart';
 import '../widgets/localized_view.dart';
@@ -59,8 +58,12 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
     super.initState();
   }
 
-  Widget findPassWordStrengthLabel(String value, String weakPasswordLabel,
-      String averagePasswordLabel, String strongPasswordLabel) {
+  Widget findPassWordStrengthLabel(
+      BuildContext context,
+      String value,
+      String weakPasswordLabel,
+      String averagePasswordLabel,
+      String strongPasswordLabel) {
     final _strongPattenPasswordValidator =
         PatternValidator(r'(?=.*?[#?!@$%^&*-])', errorText: '');
     final _goodPatternPasswordValidator =
@@ -68,12 +71,16 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
     if (_strongPattenPasswordValidator.isValid(value)) {
       return Text(strongPasswordLabel,
           style: TextStyle(
-            color: yaru.Colors.green,
+            color: Theme.of(context)
+                .elevatedButtonTheme
+                .style!
+                .backgroundColor!
+                .resolve({MaterialState.pressed}),
           ));
     } else if (_goodPatternPasswordValidator.isValid(value)) {
       return Text(averagePasswordLabel,
           style: TextStyle(
-            color: yaru.Colors.orange,
+            color: Theme.of(context).colorScheme.primary,
           ));
     }
     if (MultiValidator([
@@ -82,7 +89,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
     ]).isValid(value)) {
       return Text(weakPasswordLabel,
           style: TextStyle(
-            color: yaru.Colors.red,
+            color: Theme.of(context).colorScheme.error,
           ));
     }
 
@@ -93,7 +100,12 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
   Widget build(BuildContext context) {
     const screenFactor = 1.6;
     const checkMarksLeftPadding = 10.0;
-    final successIcon = Icon(Icons.check_circle, color: yaru.Colors.green);
+    final successIcon = Icon(Icons.check_circle,
+        color: Theme.of(context)
+            .elevatedButtonTheme
+            .style!
+            .backgroundColor!
+            .resolve({MaterialState.focused}));
 
     return LocalizedView(
         builder: (context, lang) => WizardPage(
@@ -211,6 +223,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                     padding: const EdgeInsets.only(
                                         left: checkMarksLeftPadding),
                                     child: findPassWordStrengthLabel(
+                                        context,
                                         value.text,
                                         lang.whoAreYouPagePasswordWeakPasswordLabel,
                                         lang.whoAreYouPagePasswordAveragePasswordLabel,

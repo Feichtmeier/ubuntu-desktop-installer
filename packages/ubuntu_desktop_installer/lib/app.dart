@@ -10,10 +10,10 @@ import 'l10n/app_localizations.dart';
 import 'pages/allocate_disk_space_page.dart';
 import 'pages/choose_your_look_page.dart';
 import 'pages/keyboard_layout_page.dart';
-import 'pages/try_or_install_page.dart';
+import 'pages/try_or_install/try_or_install_page.dart';
 import 'pages/turn_off_rst_page.dart';
 import 'pages/updates_other_software/updates_other_software_page.dart';
-import 'pages/welcome_page.dart';
+import 'pages/welcome/welcome_page.dart';
 import 'pages/write_changes_to_disk_page.dart';
 import 'routes.dart';
 
@@ -46,15 +46,16 @@ class UbuntuDesktopInstallerApp extends StatelessWidget {
           const LocalizationsDelegateOc(),
         ],
         supportedLocales: AppLocalizations.supportedLocales,
-        home: WelcomePage(),
+        initialRoute: Routes.welcome,
         routes: <String, WidgetBuilder>{
-          Routes.tryOrInstall: (context) => TryOrInstallPage(),
-          Routes.turnOffRST: (context) => const TurnOffRSTPage(),
+          Routes.welcome: WelcomePage.create,
+          Routes.tryOrInstall: TryOrInstallPage.create,
+          Routes.turnOffRST: TurnOffRSTPage.create,
           Routes.keyboardLayout: (context) => KeyboardLayoutPage(),
           Routes.updatesOtherSoftware: UpdatesOtherSoftwarePage.create,
           Routes.allocateDiskSpace: (context) => AllocateDiskSpacePage(),
           Routes.writeChangesToDisk: (context) => WriteChangesToDiskPage(),
-          Routes.chooseYourLook: (context) => ChooseYourLookPage(),
+          Routes.chooseYourLook:  ChooseYourLookPage.create,
           Routes.whoAreYouPage: (context) => WhoAreYouPage()
         },
       ),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:subiquity_client/subiquity_client.dart';
-import 'country.dart';
+import 'city.dart';
 
 import '../../widgets.dart';
 import '../wizard_page.dart';
@@ -17,14 +17,14 @@ class WhereAreYouPage extends StatefulWidget {
 }
 
 class _WhereAreYouPageState extends State<WhereAreYouPage> {
-  List<Country> _countries = [];
+  List<City> _cities = [];
 
-  Future<List<Country>> getCountries() async {
+  Future<List<City>> getCities() async {
     final response = await rootBundle.loadString('assets/countries.json');
     final parsed =
         json.decode(response.toString()).cast<Map<String, dynamic>>();
-    _countries = parsed.map<Country>((json) => Country.fromJson(json)).toList();
-    return _countries;
+    _cities = parsed.map<City>((json) => City.fromJson(json)).toList();
+    return _cities;
   }
 
   @override
@@ -37,7 +37,7 @@ class _WhereAreYouPageState extends State<WhereAreYouPage> {
   @override
   Widget build(BuildContext context) {
     final _factor = MediaQuery.of(context).size.width / 12;
-    getCountries();
+    getCities();
     return LocalizedView(
         builder: (context, lang) => WizardPage(
               title: Text('Where are you currently?'),
@@ -54,8 +54,8 @@ class _WhereAreYouPageState extends State<WhereAreYouPage> {
                           if (textEditingValue.text == '') {
                             return const Iterable<String>.empty();
                           }
-                          return _countries
-                              .map((e) => e.city.toString())
+                          return _cities
+                              .map((citiy) => citiy.name.toString())
                               .toList()
                               .where((option) {
                             return option
@@ -68,14 +68,14 @@ class _WhereAreYouPageState extends State<WhereAreYouPage> {
                     ),
                   ),
                   Expanded(
-                    child: FutureBuilder<List<Country>>(
+                    child: FutureBuilder<List<City>>(
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return ListView(
                               children: snapshot.data!
-                                  .map((country) => ListTile(
-                                        onTap: () => print(country.name),
-                                        title: Text(country.city.toString()),
+                                  .map((city) => ListTile(
+                                        onTap: () => print(city.name),
+                                        title: Text(city.name.toString()),
                                       ))
                                   .toList());
                         } else if (snapshot.hasError) {
@@ -84,7 +84,7 @@ class _WhereAreYouPageState extends State<WhereAreYouPage> {
                           return CircularProgressIndicator();
                         }
                       },
-                      future: getCountries(),
+                      future: getCities(),
                     ),
                   ),
                 ],

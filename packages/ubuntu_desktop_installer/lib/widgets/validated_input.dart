@@ -23,50 +23,55 @@ class ValidatedInput extends StatelessWidget {
   /// input value is valid.
   final Widget successWidget;
 
+  /// Sets the optional width for layout reasons.
+  final double? width;
+
+  /// Sets the optional space between the [TextField] and the successWidget
+  final double? spacing;
+
   /// Creates a [TextFormField] and a check mark.
   ///
   /// The `validator' helps to decide when to show the check mark.
-  ValidatedInput(
-      {Key? key,
-      required this.formKey,
-      required this.controller,
-      required this.validator,
-      required this.label,
-      required this.obscureText,
-      required this.successWidget})
-      : super(key: key);
+  ValidatedInput({
+    Key? key,
+    required this.formKey,
+    required this.controller,
+    required this.validator,
+    required this.label,
+    required this.obscureText,
+    required this.successWidget,
+    this.spacing,
+    this.width,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10, bottom: 10),
-      child: Row(
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 1.6,
-            child: Form(
-              key: formKey,
-              child: TextFormField(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                controller: controller,
-                validator: validator,
-                obscureText: obscureText,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: label),
-              ),
+    return Row(
+      children: [
+        SizedBox(
+          width: width,
+          child: Form(
+            key: formKey,
+            child: TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              controller: controller,
+              validator: validator,
+              obscureText: obscureText,
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(), labelText: label),
             ),
           ),
-          ValueListenableBuilder<TextEditingValue>(
-              valueListenable: controller,
-              builder: (context, value, child) {
-                return Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: !validator.isValid(value.text)
-                        ? Text('')
-                        : successWidget);
-              })
-        ],
-      ),
+        ),
+        ValueListenableBuilder<TextEditingValue>(
+            valueListenable: controller,
+            builder: (context, value, child) {
+              return Padding(
+                  padding: EdgeInsets.only(left: spacing ?? 0.0),
+                  child: !validator.isValid(value.text)
+                      ? Text('')
+                      : successWidget);
+            })
+      ],
     );
   }
 }

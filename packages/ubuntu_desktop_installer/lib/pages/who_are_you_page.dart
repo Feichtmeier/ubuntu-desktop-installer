@@ -102,35 +102,46 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ValidatedInput(
-                      formKey: _realNameFormKey,
-                      controller: _realNameController,
-                      validator: MultiValidator([
-                        RequiredValidator(
-                            errorText: lang
-                                .whoAreYouPageRealNameRequiredValidatorErrorText),
-                        MinLengthValidator(2,
-                            errorText: lang
-                                .whoAreYouPageRealNameMinLengthValidatorErrorText)
-                      ]),
-                      label: lang.whoAreYouPageRealNameLabel,
-                      obscureText: false,
-                      successWidget: successIcon,
-                    ),
-                    ValidatedInput(
-                        formKey: _computerNameFormKey,
-                        controller: _computerNameController,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: ValidatedInput(
+                        width: MediaQuery.of(context).size.width / screenFactor,
+                        spacing: checkMarksLeftPadding,
+                        formKey: _realNameFormKey,
+                        controller: _realNameController,
                         validator: MultiValidator([
                           RequiredValidator(
                               errorText: lang
-                                  .whoAreYouPageComputerNameRequiredValidatorErrorText),
+                                  .whoAreYouPageRealNameRequiredValidatorErrorText),
                           MinLengthValidator(2,
                               errorText: lang
-                                  .whoAreYouPageComputerNameMinLengthValidatorErrorText)
+                                  .whoAreYouPageRealNameMinLengthValidatorErrorText)
                         ]),
-                        label: lang.whoAreYouPageComputerNameLabel,
+                        label: lang.whoAreYouPageRealNameLabel,
+                        obscureText: false,
                         successWidget: successIcon,
-                        obscureText: false),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: ValidatedInput(
+                          width:
+                              MediaQuery.of(context).size.width / screenFactor,
+                          spacing: checkMarksLeftPadding,
+                          formKey: _computerNameFormKey,
+                          controller: _computerNameController,
+                          validator: MultiValidator([
+                            RequiredValidator(
+                                errorText: lang
+                                    .whoAreYouPageComputerNameRequiredValidatorErrorText),
+                            MinLengthValidator(2,
+                                errorText: lang
+                                    .whoAreYouPageComputerNameMinLengthValidatorErrorText)
+                          ]),
+                          label: lang.whoAreYouPageComputerNameLabel,
+                          successWidget: successIcon,
+                          obscureText: false),
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 15),
                       child: SizedBox(
@@ -141,24 +152,29 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                         ),
                       ),
                     ),
-                    ValidatedInput(
-                      formKey: _usernameFormKey,
-                      controller: _usernameController,
-                      validator: MultiValidator([
-                        RequiredValidator(
-                            errorText: lang
-                                .whoAreYouPageUsernameRequiredValidatorErrorText),
-                        MinLengthValidator(2,
-                            errorText: lang
-                                .whoAreYouPageUsernameMinLengthValidatorErrorText),
-                        PatternValidator(
-                            r'^(?=.{2,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$',
-                            errorText: lang
-                                .whoAreYouPageUsernamePatternValidatorErrorText)
-                      ]),
-                      label: lang.whoAreYouPageUsernameLabel,
-                      obscureText: false,
-                      successWidget: successIcon,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: ValidatedInput(
+                        width: MediaQuery.of(context).size.width / screenFactor,
+                        spacing: checkMarksLeftPadding,
+                        formKey: _usernameFormKey,
+                        controller: _usernameController,
+                        validator: MultiValidator([
+                          RequiredValidator(
+                              errorText: lang
+                                  .whoAreYouPageUsernameRequiredValidatorErrorText),
+                          MinLengthValidator(2,
+                              errorText: lang
+                                  .whoAreYouPageUsernameMinLengthValidatorErrorText),
+                          PatternValidator(
+                              r'^(?=.{2,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$',
+                              errorText: lang
+                                  .whoAreYouPageUsernamePatternValidatorErrorText)
+                        ]),
+                        label: lang.whoAreYouPageUsernameLabel,
+                        obscureText: false,
+                        successWidget: successIcon,
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 10),

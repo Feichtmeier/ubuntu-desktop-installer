@@ -64,11 +64,16 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
       String weakPasswordLabel,
       String averagePasswordLabel,
       String strongPasswordLabel) {
-    final _strongPattenPasswordValidator =
+    final strongPattenPasswordValidator =
         PatternValidator(r'(?=.*?[#?!@$%^&*-])', errorText: '');
-    final _goodPatternPasswordValidator =
+    final goodPatternPasswordValidator =
         PatternValidator(r'(^.*(?=.{6,})(?=.*\d).*$)', errorText: '');
-    if (_strongPattenPasswordValidator.isValid(value)) {
+    final weakPasswordValidator = MultiValidator([
+      RequiredValidator(errorText: ''),
+      MinLengthValidator(2, errorText: ''),
+    ]);
+
+    if (strongPattenPasswordValidator.isValid(value)) {
       return Text(strongPasswordLabel,
           style: TextStyle(
             color: Theme.of(context)
@@ -77,16 +82,13 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                 .backgroundColor!
                 .resolve({MaterialState.pressed}),
           ));
-    } else if (_goodPatternPasswordValidator.isValid(value)) {
+    } else if (goodPatternPasswordValidator.isValid(value)) {
       return Text(averagePasswordLabel,
           style: TextStyle(
             color: Theme.of(context).colorScheme.primary,
           ));
     }
-    if (MultiValidator([
-      RequiredValidator(errorText: ''),
-      MinLengthValidator(2, errorText: ''),
-    ]).isValid(value)) {
+    if (weakPasswordValidator.isValid(value)) {
       return Text(weakPasswordLabel,
           style: TextStyle(
             color: Theme.of(context).colorScheme.error,

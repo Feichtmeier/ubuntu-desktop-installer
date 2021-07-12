@@ -46,7 +46,7 @@ class UbuntuDesktopInstallerApp extends StatelessWidget {
           const LocalizationsDelegateOc(),
         ],
         supportedLocales: AppLocalizations.supportedLocales,
-        home: WhereAreYouPage(),
+        home: WelcomePage(),
         routes: <String, WidgetBuilder>{
           Routes.tryOrInstall: (context) => TryOrInstallPage(),
           Routes.turnOffRST: (context) => const TurnOffRSTPage(),

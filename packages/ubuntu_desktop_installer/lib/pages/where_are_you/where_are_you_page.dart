@@ -16,7 +16,7 @@ class WhereAreYouPage extends StatefulWidget {
 
 class _WhereAreYouPageState extends State<WhereAreYouPage> {
   List<City> _cityList = [];
-  late String? timeZone;
+  late String? _timeZone;
 
   Future<List<City>> getCities() async {
     final response = await rootBundle.loadString('assets/cities.json');
@@ -28,70 +28,85 @@ class _WhereAreYouPageState extends State<WhereAreYouPage> {
 
   @override
   void initState() {
-    timeZone = '';
+    _timeZone = '';
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final factor = MediaQuery.of(context).size.width / 12;
     getCities();
 
     return LocalizedView(
         builder: (context, lang) => WizardPage(
               title: Text('Where are you currently?'),
-              content: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(
-                        bottom: factor, left: factor / 3, right: factor),
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width / 2.7,
-                      child: Autocomplete<String>(
-                        optionsBuilder: (textEditingValue) {
-                          if (textEditingValue.text == '') {
-                            return const Iterable<String>.empty();
-                          }
-                          return _cityList
-                              .map((citiy) => citiy.name.toString())
-                              .toList()
-                              .where((option) {
-                            return option
-                                .toLowerCase()
-                                .contains(textEditingValue.text.toLowerCase());
-                          });
-                        },
-                        onSelected: (selectedString) {
-                          var newTimeZone = _cityList
-                              .where((city) => city.name
-                                  .toLowerCase()
-                                  .contains(selectedString.toLowerCase()))
-                              .first
-                              .timeZone
-                              .first;
+              content: Padding(
+                padding: const EdgeInsets.only(bottom: 30),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Search for your city:'),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width / 3,
+                            child: Autocomplete<String>(
+                              optionsBuilder: (textEditingValue) {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<String>.empty();
+                                }
+                                return _cityList
+                                    .map((citiy) => citiy.name.toString())
+                                    .toList()
+                                    .where((option) {
+                                  return option.toLowerCase().contains(
+                                      textEditingValue.text.toLowerCase());
+                                });
+                              },
+                              onSelected: (selectedString) {
+                                var newTimeZone = _cityList
+                                    .where((city) => city.name
+                                        .toLowerCase()
+                                        .contains(selectedString.toLowerCase()))
+                                    .first
+                                    .timeZone
+                                    .first;
 
-                          setState(() {
-                            timeZone = newTimeZone;
-                          });
-                        },
+                                setState(() {
+                                  _timeZone = newTimeZone;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: factor),
-                    child: Icon(Icons.arrow_forward),
-                  ),
-                  Expanded(
-                      child: Padding(
-                    padding: EdgeInsets.only(
-                        bottom: factor, left: factor / 3, right: factor),
-                    child: Text(
-                      timeZone ?? ' ',
-                      style: Theme.of(context).textTheme.headline5,
-                    ),
-                  )),
-                ],
+                    Expanded(
+                        child: Padding(
+                      padding: EdgeInsets.only(left: 60, right: 8, bottom: 14),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('Timezone:'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              '${_timeZone!}',
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+                  ],
+                ),
               ),
               actions: <WizardAction>[
                 WizardAction(

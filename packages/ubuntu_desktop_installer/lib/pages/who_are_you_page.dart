@@ -26,11 +26,11 @@ enum LoginStrategy {
   /// If selected can be used for the representation
   /// of the user preference to always entering the password
   /// at login.
-  REQUIRE_PASSWORD,
+  requirePassword,
 
   /// If selected can be used for the representation
   /// of the user preference to log in without a password.
-  AUTO_LOGIN
+  autoLogin
 }
 
 class _WhoAreYouPageState extends State<WhoAreYouPage> {
@@ -55,7 +55,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
 
-    _loginStrategy = LoginStrategy.REQUIRE_PASSWORD;
+    _loginStrategy = LoginStrategy.requirePassword;
     super.initState();
   }
 
@@ -257,10 +257,10 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                     Row(
                       children: [
                         Radio<LoginStrategy>(
-                            value: LoginStrategy.AUTO_LOGIN,
+                            value: LoginStrategy.autoLogin,
                             groupValue: _loginStrategy,
                             onChanged: (_) => setState(() {
-                                  _loginStrategy = LoginStrategy.AUTO_LOGIN;
+                                  _loginStrategy = LoginStrategy.autoLogin;
                                 })),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -271,11 +271,11 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                     Row(
                       children: [
                         Radio<LoginStrategy>(
-                            value: LoginStrategy.REQUIRE_PASSWORD,
+                            value: LoginStrategy.requirePassword,
                             groupValue: _loginStrategy,
                             onChanged: (_) => setState(() {
                                   _loginStrategy =
-                                      LoginStrategy.REQUIRE_PASSWORD;
+                                      LoginStrategy.requirePassword;
                                 })),
                         Padding(
                           padding: const EdgeInsets.all(8.0),

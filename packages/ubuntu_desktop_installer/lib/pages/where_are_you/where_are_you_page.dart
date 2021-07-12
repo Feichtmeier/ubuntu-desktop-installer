@@ -2,12 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:subiquity_client/subiquity_client.dart';
-import 'city.dart';
 
 import '../../widgets.dart';
 import '../wizard_page.dart';
+import 'city.dart';
 
 class WhereAreYouPage extends StatefulWidget {
   const WhereAreYouPage({Key? key}) : super(key: key);
@@ -17,27 +15,28 @@ class WhereAreYouPage extends StatefulWidget {
 }
 
 class _WhereAreYouPageState extends State<WhereAreYouPage> {
-  List<City> _cities = [];
+  List<City> _cityList = [];
+  late String? timeZone;
 
   Future<List<City>> getCities() async {
-    final response = await rootBundle.loadString('assets/countries.json');
+    final response = await rootBundle.loadString('assets/cities.json');
     final parsed =
         json.decode(response.toString()).cast<Map<String, dynamic>>();
-    _cities = parsed.map<City>((json) => City.fromJson(json)).toList();
-    return _cities;
+    _cityList = parsed.map<City>((json) => City.fromJson(json)).toList();
+    return _cityList;
   }
 
   @override
   void initState() {
-    final client = Provider.of<SubiquityClient>(context, listen: false);
-    // client.
+    timeZone = '';
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _factor = MediaQuery.of(context).size.width / 12;
+    final factor = MediaQuery.of(context).size.width / 12;
     getCities();
+
     return LocalizedView(
         builder: (context, lang) => WizardPage(
               title: Text('Where are you currently?'),
@@ -46,7 +45,7 @@ class _WhereAreYouPageState extends State<WhereAreYouPage> {
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.only(
-                        bottom: _factor, left: _factor / 3, right: _factor),
+                        bottom: factor, left: factor / 3, right: factor),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width / 2.7,
                       child: Autocomplete<String>(
@@ -54,7 +53,7 @@ class _WhereAreYouPageState extends State<WhereAreYouPage> {
                           if (textEditingValue.text == '') {
                             return const Iterable<String>.empty();
                           }
-                          return _cities
+                          return _cityList
                               .map((citiy) => citiy.name.toString())
                               .toList()
                               .where((option) {
@@ -63,30 +62,35 @@ class _WhereAreYouPageState extends State<WhereAreYouPage> {
                                 .contains(textEditingValue.text.toLowerCase());
                           });
                         },
-                        onSelected: print,
+                        onSelected: (selectedString) {
+                          var newTimeZone = _cityList
+                              .where((city) => city.name
+                                  .toLowerCase()
+                                  .contains(selectedString.toLowerCase()))
+                              .first
+                              .timeZone
+                              .first;
+
+                          setState(() {
+                            timeZone = newTimeZone;
+                          });
+                        },
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: FutureBuilder<List<City>>(
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return ListView(
-                              children: snapshot.data!
-                                  .map((city) => ListTile(
-                                        onTap: () => print(city.name),
-                                        title: Text(city.name.toString()),
-                                      ))
-                                  .toList());
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          return CircularProgressIndicator();
-                        }
-                      },
-                      future: getCities(),
-                    ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: factor),
+                    child: Icon(Icons.arrow_forward),
                   ),
+                  Expanded(
+                      child: Padding(
+                    padding: EdgeInsets.only(
+                        bottom: factor, left: factor / 3, right: factor),
+                    child: Text(
+                      timeZone ?? ' ',
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                  )),
                 ],
               ),
               actions: <WizardAction>[

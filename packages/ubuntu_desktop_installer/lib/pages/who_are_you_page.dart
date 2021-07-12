@@ -91,9 +91,9 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
 
   @override
   Widget build(BuildContext context) {
-    const _screenFactor = 1.6;
+    const screenFactor = 1.6;
     const checkMarksLeftPadding = 10.0;
-    final _successIcon = Icon(Icons.check_circle, color: yaru.Colors.green);
+    final successIcon = Icon(Icons.check_circle, color: yaru.Colors.green);
 
     return LocalizedView(
         builder: (context, lang) => WizardPage(
@@ -115,7 +115,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                       ]),
                       label: lang.whoAreYouPageRealNameLabel,
                       obscureText: false,
-                      successWidget: _successIcon,
+                      successWidget: successIcon,
                     ),
                     ValidatedInput(
                         formKey: _computerNameFormKey,
@@ -129,13 +129,12 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                   .whoAreYouPageComputerNameMinLengthValidatorErrorText)
                         ]),
                         label: lang.whoAreYouPageComputerNameLabel,
-                        successWidget: _successIcon,
+                        successWidget: successIcon,
                         obscureText: false),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 15),
                       child: SizedBox(
-                        width:
-                            MediaQuery.of(context).size.width / _screenFactor,
+                        width: MediaQuery.of(context).size.width / screenFactor,
                         child: Text(
                           lang.whoAreYouPageComputerNameInfo,
                           style: Theme.of(context).textTheme.caption,
@@ -159,7 +158,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                       ]),
                       label: lang.whoAreYouPageUsernameLabel,
                       obscureText: false,
-                      successWidget: _successIcon,
+                      successWidget: successIcon,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -167,7 +166,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                         children: [
                           SizedBox(
                             width: MediaQuery.of(context).size.width /
-                                _screenFactor,
+                                screenFactor,
                             child: Form(
                               key: _passwordFormKey,
                               child: TextFormField(
@@ -210,7 +209,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                         children: [
                           SizedBox(
                             width: MediaQuery.of(context).size.width /
-                                _screenFactor,
+                                screenFactor,
                             child: Form(
                               key: _confirmPasswordFormKey,
                               child: TextFormField(
@@ -249,7 +248,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                                         .whoAreYouPagePasswordMinLengthValidatorErrorText),
                                               ]).isValid(value.text)
                                           ? Text('')
-                                          : _successIcon,
+                                          : successIcon,
                                 );
                               })
                         ],

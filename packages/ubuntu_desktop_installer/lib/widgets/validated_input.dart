@@ -20,7 +20,7 @@ class ValidatedInput extends StatelessWidget {
   final bool obscureText;
 
   /// The specific widget shown right to the [TextField] if the
-  /// input value is validated.
+  /// input value is valid.
   final Widget successWidget;
 
   /// Creates a [TextFormField] and a check mark.

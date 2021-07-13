@@ -5,10 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:subiquity_client/subiquity_client.dart';
 import 'package:yaru/yaru.dart' as yaru;
 
-import '../routes.dart';
-import '../widgets/localized_view.dart';
-import '../widgets/validated_input.dart';
-import 'wizard_page.dart';
+import '../../routes.dart';
+import '../../widgets/localized_view.dart';
+import '../../widgets/validated_input.dart';
+import '../wizard_page.dart';
+import 'who_are_you_model.dart';
 
 /// The installer page for setting up the user data.
 ///
@@ -17,29 +18,25 @@ class WhoAreYouPage extends StatefulWidget {
   /// Creates a the installer page for setting up the user data.
   const WhoAreYouPage({Key? key}) : super(key: key);
 
+  ///
+  static Widget create(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => WhoAreYouModel(),
+      child: WhoAreYouPage(),
+    );
+  }
+
   @override
   _WhoAreYouPageState createState() => _WhoAreYouPageState();
 }
 
-/// An enum for storing the login strategy.
-enum LoginStrategy {
-  /// If selected can be used for the representation
-  /// of the user preference to always entering the password
-  /// at login.
-  requirePassword,
-
-  /// If selected can be used for the representation
-  /// of the user preference to log in without a password.
-  autoLogin
-}
-
 class _WhoAreYouPageState extends State<WhoAreYouPage> {
-  late LoginStrategy _loginStrategy;
-  late TextEditingController _realNameController;
-  late TextEditingController _computerNameController;
-  late TextEditingController _usernameController;
-  late TextEditingController _passwordController;
-  late TextEditingController _confirmPasswordController;
+  late WhoAreYouModel _whoAreYouModel;
+  final _realNameController = TextEditingController();
+  final _computerNameController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   final _usernameFormKey = GlobalKey<FormState>();
   final _realNameFormKey = GlobalKey<FormState>();
@@ -49,14 +46,37 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
 
   @override
   void initState() {
-    _realNameController = TextEditingController();
-    _computerNameController = TextEditingController();
-    _usernameController = TextEditingController();
-    _passwordController = TextEditingController();
-    _confirmPasswordController = TextEditingController();
-
-    _loginStrategy = LoginStrategy.requirePassword;
     super.initState();
+
+    _whoAreYouModel = Provider.of<WhoAreYouModel>(context, listen: false);
+    _whoAreYouModel.loadProfileSetup().then((_) {
+      _usernameController.text = _whoAreYouModel.username;
+    });
+
+    _realNameController.addListener(() {
+      _whoAreYouModel.realName = _realNameController.text;
+    });
+
+    _computerNameController.addListener(() {
+      _whoAreYouModel.hostName = _computerNameController.text;
+    });
+
+    _usernameController.addListener(() {
+      _whoAreYouModel.username = _usernameController.text;
+    });
+    _passwordController.addListener(() {
+      _whoAreYouModel.password = _passwordController.text;
+    });
+  }
+
+  @override
+  void dispose() {
+    _realNameController.dispose();
+    _computerNameController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
   }
 
   Widget findPassWordStrengthLabel(
@@ -278,9 +298,10 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                       children: [
                         Radio<LoginStrategy>(
                             value: LoginStrategy.autoLogin,
-                            groupValue: _loginStrategy,
+                            groupValue: _whoAreYouModel.loginStrategy,
                             onChanged: (_) => setState(() {
-                                  _loginStrategy = LoginStrategy.autoLogin;
+                                  _whoAreYouModel.loginStrategy =
+                                      _whoAreYouModel.loginStrategy;
                                 })),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -292,9 +313,9 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                       children: [
                         Radio<LoginStrategy>(
                             value: LoginStrategy.requirePassword,
-                            groupValue: _loginStrategy,
+                            groupValue: _whoAreYouModel.loginStrategy,
                             onChanged: (_) => setState(() {
-                                  _loginStrategy =
+                                  _whoAreYouModel.loginStrategy =
                                       LoginStrategy.requirePassword;
                                 })),
                         Padding(
@@ -329,7 +350,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                       final encrypter = encrypt.Encrypter(encrypt.AES(key));
 
                       final encrypted =
-                          encrypter.encrypt(_passwordController.text, iv: iv);
+                          encrypter.encrypt(_whoAreYouModel.password, iv: iv);
 
                       await client.setIdentity(IdentityData(
                           hostname: _computerNameController.text,

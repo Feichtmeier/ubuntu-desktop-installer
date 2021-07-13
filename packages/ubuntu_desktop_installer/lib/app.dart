@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:ubuntu_desktop_installer/pages/who_are_you_page.dart';
 import 'package:yaru/yaru.dart' as yaru;
 
 import 'app_theme.dart';
@@ -14,6 +13,7 @@ import 'pages/try_or_install/try_or_install_page.dart';
 import 'pages/turn_off_rst_page.dart';
 import 'pages/updates_other_software/updates_other_software_page.dart';
 import 'pages/welcome/welcome_page.dart';
+import 'pages/who_are_you/who_are_you_page.dart';
 import 'pages/write_changes_to_disk_page.dart';
 import 'routes.dart';
 
@@ -56,7 +56,7 @@ class UbuntuDesktopInstallerApp extends StatelessWidget {
           Routes.allocateDiskSpace: (context) => AllocateDiskSpacePage(),
           Routes.writeChangesToDisk: (context) => WriteChangesToDiskPage(),
           Routes.chooseYourLook: ChooseYourLookPage.create,
-          Routes.whoAreYouPage: (context) => WhoAreYouPage(),
+          Routes.whoAreYouPage: WhoAreYouPage.create,
         },
       ),
     );

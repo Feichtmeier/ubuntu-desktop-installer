@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:provider/provider.dart';
 import 'package:subiquity_client/subiquity_client.dart';
-import 'package:yaru/yaru.dart' as yaru;
 
+import '../../app_theme.dart';
 import '../../routes.dart';
 import '../../widgets/localized_view.dart';
 import '../../widgets/validated_input.dart';
@@ -79,7 +79,8 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
     final size = MediaQuery.of(context).size;
     const padding = 10.0;
     const screenFactor = 1.6;
-    final successIcon = Icon(Icons.check_circle, color: yaru.Colors.green);
+    final successIcon =
+        Icon(Icons.check_circle, color: Theme.of(context).successColor);
     final whoAreYouModel = Provider.of<WhoAreYouModel>(context, listen: true);
 
     return LocalizedView(builder: (context, lang) {
@@ -96,14 +97,14 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
           case PasswordStrength.weakPassword:
             return Text(weakPasswordLabel,
                 style: TextStyle(
-                  color: yaru.Colors.red,
+                  color: Theme.of(context).errorColor,
                 ));
           case PasswordStrength.averagePassword:
             return Text(averagePasswordLabel);
           case PasswordStrength.strongPassword:
             return Text(strongPasswordLabel,
                 style: TextStyle(
-                  color: yaru.Colors.green,
+                  color: Theme.of(context).successColor,
                 ));
           default:
             return SizedBox.shrink();

@@ -287,7 +287,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                                     errorText: lang
                                                         .whoAreYouPagePasswordMinLengthValidatorErrorText),
                                               ]).isValid(value.text)
-                                          ? Text('')
+                                          ? SizedBox.shrink()
                                           : successIcon,
                                 );
                               })

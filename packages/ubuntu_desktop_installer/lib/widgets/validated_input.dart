@@ -68,7 +68,7 @@ class ValidatedInput extends StatelessWidget {
               return Padding(
                   padding: EdgeInsets.only(left: spacing ?? 0.0),
                   child: !validator.isValid(value.text)
-                      ? Text('')
+                      ? SizedBox.shrink()
                       : successWidget);
             })
       ],

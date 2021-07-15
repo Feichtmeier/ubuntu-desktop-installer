@@ -300,7 +300,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                             value: LoginStrategy.autoLogin,
                             groupValue: _whoAreYouModel.loginStrategy,
                             onChanged: (_) => _whoAreYouModel.loginStrategy =
-                                _whoAreYouModel.loginStrategy),
+                                LoginStrategy.autoLogin),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(lang.whoAreYouPageLoginStrategyAutoLogin),

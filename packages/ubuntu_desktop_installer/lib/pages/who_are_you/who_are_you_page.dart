@@ -31,7 +31,6 @@ class WhoAreYouPage extends StatefulWidget {
 }
 
 class _WhoAreYouPageState extends State<WhoAreYouPage> {
-  late WhoAreYouModel _whoAreYouModel;
   final _realNameController = TextEditingController();
   final _computerNameController = TextEditingController();
   final _usernameController = TextEditingController();
@@ -48,24 +47,24 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
   void initState() {
     super.initState();
 
-    _whoAreYouModel = Provider.of<WhoAreYouModel>(context, listen: false);
-    _whoAreYouModel.loadProfileSetup().then((_) {
-      _usernameController.text = _whoAreYouModel.username;
+    final whoAreYouModel = Provider.of<WhoAreYouModel>(context, listen: false);
+    whoAreYouModel.loadProfileSetup().then((_) {
+      _usernameController.text = whoAreYouModel.username;
     });
 
     _realNameController.addListener(() {
-      _whoAreYouModel.realName = _realNameController.text;
+      whoAreYouModel.realName = _realNameController.text;
     });
 
     _computerNameController.addListener(() {
-      _whoAreYouModel.hostName = _computerNameController.text;
+      whoAreYouModel.hostName = _computerNameController.text;
     });
 
     _usernameController.addListener(() {
-      _whoAreYouModel.username = _usernameController.text;
+      whoAreYouModel.username = _usernameController.text;
     });
     _passwordController.addListener(() {
-      _whoAreYouModel.password = _passwordController.text;
+      whoAreYouModel.password = _passwordController.text;
     });
   }
 
@@ -117,6 +116,8 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
     const screenFactor = 1.6;
     const checkMarksLeftPadding = 10.0;
     final successIcon = Icon(Icons.check_circle, color: yaru.Colors.green);
+
+    final whoAreYouModel = Provider.of<WhoAreYouModel>(context, listen: true);
 
     return LocalizedView(
         builder: (context, lang) => WizardPage(
@@ -298,8 +299,8 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                       children: [
                         Radio<LoginStrategy>(
                             value: LoginStrategy.autoLogin,
-                            groupValue: _whoAreYouModel.loginStrategy,
-                            onChanged: (_) => _whoAreYouModel.loginStrategy =
+                            groupValue: whoAreYouModel.loginStrategy,
+                            onChanged: (_) => whoAreYouModel.loginStrategy =
                                 LoginStrategy.autoLogin),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -311,8 +312,8 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                       children: [
                         Radio<LoginStrategy>(
                             value: LoginStrategy.requirePassword,
-                            groupValue: _whoAreYouModel.loginStrategy,
-                            onChanged: (_) => _whoAreYouModel.loginStrategy =
+                            groupValue: whoAreYouModel.loginStrategy,
+                            onChanged: (_) => whoAreYouModel.loginStrategy =
                                 LoginStrategy.requirePassword),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -346,12 +347,12 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                       final encrypter = encrypt.Encrypter(encrypt.AES(key));
 
                       final encrypted =
-                          encrypter.encrypt(_whoAreYouModel.password, iv: iv);
+                          encrypter.encrypt(whoAreYouModel.password, iv: iv);
 
                       await client.setIdentity(IdentityData(
-                          hostname: _computerNameController.text,
-                          realname: _realNameController.text,
-                          username: _usernameController.text,
+                          hostname: whoAreYouModel.hostName,
+                          realname: whoAreYouModel.realName,
+                          username: whoAreYouModel.username,
                           cryptedPassword: encrypted.toString()));
 
                       Navigator.pushNamed(context, Routes.chooseYourLook);

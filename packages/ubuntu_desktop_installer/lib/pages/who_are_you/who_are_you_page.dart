@@ -89,7 +89,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: padding, bottom: padding),
                   child: ValidatedInput(
-                    width: size.width / screenFactor,
+                    fieldWidth: size.width / screenFactor,
                     spacing: padding,
                     initialValue: whoAreYouModel.realName,
                     onChanged: (value) => whoAreYouModel.realName = value,
@@ -108,7 +108,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: padding, bottom: padding),
                   child: ValidatedInput(
-                    width: size.width / screenFactor,
+                    fieldWidth: size.width / screenFactor,
                     spacing: padding,
                     initialValue: whoAreYouModel.hostName,
                     onChanged: (value) => whoAreYouModel.hostName = value,
@@ -137,7 +137,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: padding, bottom: padding),
                   child: ValidatedInput(
-                    width: size.width / screenFactor,
+                    fieldWidth: size.width / screenFactor,
                     spacing: padding,
                     initialValue: whoAreYouModel.username,
                     onChanged: (value) => whoAreYouModel.username = value,
@@ -160,7 +160,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: padding, bottom: padding),
                   child: ValidatedInput(
-                    width: size.width / screenFactor,
+                    fieldWidth: size.width / screenFactor,
                     spacing: padding,
                     initialValue: whoAreYouModel.password,
                     onChanged: (value) => whoAreYouModel.password = value,
@@ -181,7 +181,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 10, bottom: 10),
                   child: ValidatedInput(
-                    width: size.width / screenFactor,
+                    fieldWidth: size.width / screenFactor,
                     spacing: padding,
                     validator: _ConfirmPasswordValidator(
                         whoAreYouModel.password,

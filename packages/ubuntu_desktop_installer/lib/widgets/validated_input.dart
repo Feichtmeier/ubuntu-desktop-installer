@@ -18,6 +18,9 @@ class ValidatedInput extends StatefulWidget {
   /// The validator used to validate the [TextField] value.
   final FieldValidator<String?> validator;
 
+  /// Whether this input field should focus itself automatically.
+  final bool autofocus;
+
   /// The label above the [TextField]
   final String? labelText;
 
@@ -29,8 +32,8 @@ class ValidatedInput extends StatefulWidget {
   /// input value is valid.
   final Widget? successWidget;
 
-  /// Sets the optional width for layout reasons.
-  final double? width;
+  /// Sets the optional field width for layout reasons.
+  final double? fieldWidth;
 
   /// Sets the optional space between the [TextField] and the successWidget
   final double? spacing;
@@ -44,11 +47,12 @@ class ValidatedInput extends StatefulWidget {
     this.initialValue,
     this.onChanged,
     required this.validator,
+    this.autofocus = false,
     this.labelText,
     this.obscureText = false,
     this.successWidget,
     this.spacing,
-    this.width,
+    this.fieldWidth,
   }) : super(key: key);
 
   @override
@@ -67,20 +71,21 @@ class _ValidatedInputState extends State<ValidatedInput> {
 
   @override
   Widget build(BuildContext context) {
+    final formField = TextFormField(
+      autofocus: widget.autofocus,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      controller: _controller,
+      onChanged: widget.onChanged,
+      validator: widget.validator,
+      obscureText: widget.obscureText,
+      decoration: InputDecoration(
+          border: OutlineInputBorder(), labelText: widget.labelText),
+    );
     return Row(
       children: [
-        SizedBox(
-          width: widget.width,
-          child: TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            controller: _controller,
-            onChanged: widget.onChanged,
-            validator: widget.validator,
-            obscureText: widget.obscureText,
-            decoration: InputDecoration(
-                border: OutlineInputBorder(), labelText: widget.labelText),
-          ),
-        ),
+        widget.fieldWidth == null
+            ? Expanded(child: formField)
+            : SizedBox(width: widget.fieldWidth, child: formField),
         ValueListenableBuilder<TextEditingValue>(
             valueListenable: _controller,
             builder: (context, value, child) {

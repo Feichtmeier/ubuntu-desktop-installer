@@ -3,9 +3,6 @@ import 'package:form_field_validator/form_field_validator.dart';
 
 /// A [TextFormField] rewarding a validated input with a specific widget.
 class ValidatedInput extends StatelessWidget {
-  /// The key used to request validation before confirming the field values.
-  final GlobalKey<FormState> formKey;
-
   /// The controller used to get the [TextField] values.
   final TextEditingController controller;
 
@@ -34,7 +31,6 @@ class ValidatedInput extends StatelessWidget {
   /// The `validator' helps to decide when to show the check mark.
   ValidatedInput({
     Key? key,
-    required this.formKey,
     required this.controller,
     required this.validator,
     required this.label,
@@ -50,16 +46,13 @@ class ValidatedInput extends StatelessWidget {
       children: [
         SizedBox(
           width: width,
-          child: Form(
-            key: formKey,
-            child: TextFormField(
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              controller: controller,
-              validator: validator,
-              obscureText: obscureText,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(), labelText: label),
-            ),
+          child: TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            controller: controller,
+            validator: validator,
+            obscureText: obscureText,
+            decoration:
+                InputDecoration(border: OutlineInputBorder(), labelText: label),
           ),
         ),
         ValueListenableBuilder<TextEditingValue>(

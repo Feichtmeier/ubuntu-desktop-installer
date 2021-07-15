@@ -38,11 +38,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  final _usernameFormKey = GlobalKey<FormState>();
-  final _realNameFormKey = GlobalKey<FormState>();
-  final _computerNameFormKey = GlobalKey<FormState>();
-  final _passwordFormKey = GlobalKey<FormState>();
-  final _confirmPasswordFormKey = GlobalKey<FormState>();
+  final _whoAreYouFormKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -124,92 +120,92 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
         builder: (context, lang) => WizardPage(
               title: Text(lang.whoAreYouPageTitle),
               content: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: ValidatedInput(
-                        width: MediaQuery.of(context).size.width / screenFactor,
-                        spacing: checkMarksLeftPadding,
-                        formKey: _realNameFormKey,
-                        controller: _realNameController,
-                        validator: MultiValidator([
-                          RequiredValidator(
-                              errorText: lang
-                                  .whoAreYouPageRealNameRequiredValidatorErrorText),
-                          MinLengthValidator(2,
-                              errorText: lang
-                                  .whoAreYouPageRealNameMinLengthValidatorErrorText)
-                        ]),
-                        label: lang.whoAreYouPageRealNameLabel,
-                        obscureText: false,
-                        successWidget: successIcon,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: ValidatedInput(
+                child: Form(
+                  key: _whoAreYouFormKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: ValidatedInput(
                           width:
                               MediaQuery.of(context).size.width / screenFactor,
                           spacing: checkMarksLeftPadding,
-                          formKey: _computerNameFormKey,
-                          controller: _computerNameController,
+                          controller: _realNameController,
                           validator: MultiValidator([
                             RequiredValidator(
                                 errorText: lang
-                                    .whoAreYouPageComputerNameRequiredValidatorErrorText),
+                                    .whoAreYouPageRealNameRequiredValidatorErrorText),
                             MinLengthValidator(2,
                                 errorText: lang
-                                    .whoAreYouPageComputerNameMinLengthValidatorErrorText)
+                                    .whoAreYouPageRealNameMinLengthValidatorErrorText)
                           ]),
-                          label: lang.whoAreYouPageComputerNameLabel,
+                          label: lang.whoAreYouPageRealNameLabel,
+                          obscureText: false,
                           successWidget: successIcon,
-                          obscureText: false),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 15),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width / screenFactor,
-                        child: Text(
-                          lang.whoAreYouPageComputerNameInfo,
-                          style: Theme.of(context).textTheme.caption,
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: ValidatedInput(
-                        width: MediaQuery.of(context).size.width / screenFactor,
-                        spacing: checkMarksLeftPadding,
-                        formKey: _usernameFormKey,
-                        controller: _usernameController,
-                        validator: MultiValidator([
-                          RequiredValidator(
-                              errorText: lang
-                                  .whoAreYouPageUsernameRequiredValidatorErrorText),
-                          MinLengthValidator(2,
-                              errorText: lang
-                                  .whoAreYouPageUsernameMinLengthValidatorErrorText),
-                          PatternValidator(
-                              r'^(?=.{2,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$',
-                              errorText: lang
-                                  .whoAreYouPageUsernamePatternValidatorErrorText)
-                        ]),
-                        label: lang.whoAreYouPageUsernameLabel,
-                        obscureText: false,
-                        successWidget: successIcon,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: Row(
-                        children: [
-                          SizedBox(
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: ValidatedInput(
                             width: MediaQuery.of(context).size.width /
                                 screenFactor,
-                            child: Form(
-                              key: _passwordFormKey,
+                            spacing: checkMarksLeftPadding,
+                            controller: _computerNameController,
+                            validator: MultiValidator([
+                              RequiredValidator(
+                                  errorText: lang
+                                      .whoAreYouPageComputerNameRequiredValidatorErrorText),
+                              MinLengthValidator(2,
+                                  errorText: lang
+                                      .whoAreYouPageComputerNameMinLengthValidatorErrorText)
+                            ]),
+                            label: lang.whoAreYouPageComputerNameLabel,
+                            successWidget: successIcon,
+                            obscureText: false),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 15),
+                        child: SizedBox(
+                          width:
+                              MediaQuery.of(context).size.width / screenFactor,
+                          child: Text(
+                            lang.whoAreYouPageComputerNameInfo,
+                            style: Theme.of(context).textTheme.caption,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: ValidatedInput(
+                          width:
+                              MediaQuery.of(context).size.width / screenFactor,
+                          spacing: checkMarksLeftPadding,
+                          controller: _usernameController,
+                          validator: MultiValidator([
+                            RequiredValidator(
+                                errorText: lang
+                                    .whoAreYouPageUsernameRequiredValidatorErrorText),
+                            MinLengthValidator(2,
+                                errorText: lang
+                                    .whoAreYouPageUsernameMinLengthValidatorErrorText),
+                            PatternValidator(
+                                r'^(?=.{2,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$',
+                                errorText: lang
+                                    .whoAreYouPageUsernamePatternValidatorErrorText)
+                          ]),
+                          label: lang.whoAreYouPageUsernameLabel,
+                          obscureText: false,
+                          successWidget: successIcon,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width /
+                                  screenFactor,
                               child: TextFormField(
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
@@ -228,32 +224,29 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                     labelText: lang.whoAreYouPagePasswordLabel),
                               ),
                             ),
-                          ),
-                          ValueListenableBuilder<TextEditingValue>(
-                              valueListenable: _passwordController,
-                              builder: (context, value, child) {
-                                return Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: checkMarksLeftPadding),
-                                    child: findPassWordStrengthLabel(
-                                        context,
-                                        value.text,
-                                        lang.whoAreYouPagePasswordWeakPasswordLabel,
-                                        lang.whoAreYouPagePasswordAveragePasswordLabel,
-                                        lang.whoAreYouPagePasswordStrongPasswordLabel));
-                              }),
-                        ],
+                            ValueListenableBuilder<TextEditingValue>(
+                                valueListenable: _passwordController,
+                                builder: (context, value, child) {
+                                  return Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: checkMarksLeftPadding),
+                                      child: findPassWordStrengthLabel(
+                                          context,
+                                          value.text,
+                                          lang.whoAreYouPagePasswordWeakPasswordLabel,
+                                          lang.whoAreYouPagePasswordAveragePasswordLabel,
+                                          lang.whoAreYouPagePasswordStrongPasswordLabel));
+                                }),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10, bottom: 10),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width /
-                                screenFactor,
-                            child: Form(
-                              key: _confirmPasswordFormKey,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width /
+                                  screenFactor,
                               child: TextFormField(
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
@@ -272,58 +265,59 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                         lang.whoAreYouPageConfirmPasswordLabel),
                               ),
                             ),
-                          ),
-                          ValueListenableBuilder<TextEditingValue>(
-                              valueListenable: _confirmPasswordController,
-                              builder: (context, value, child) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: checkMarksLeftPadding),
-                                  child:
-                                      value.text != _passwordController.text ||
-                                              !MultiValidator([
-                                                RequiredValidator(
-                                                    errorText: lang
-                                                        .whoAreYouPagePasswordRequiredValidatorErrorText),
-                                                MinLengthValidator(2,
-                                                    errorText: lang
-                                                        .whoAreYouPagePasswordMinLengthValidatorErrorText),
-                                              ]).isValid(value.text)
-                                          ? SizedBox.shrink()
-                                          : successIcon,
-                                );
-                              })
+                            ValueListenableBuilder<TextEditingValue>(
+                                valueListenable: _confirmPasswordController,
+                                builder: (context, value, child) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: checkMarksLeftPadding),
+                                    child: value.text !=
+                                                _passwordController.text ||
+                                            !MultiValidator([
+                                              RequiredValidator(
+                                                  errorText: lang
+                                                      .whoAreYouPagePasswordRequiredValidatorErrorText),
+                                              MinLengthValidator(2,
+                                                  errorText: lang
+                                                      .whoAreYouPagePasswordMinLengthValidatorErrorText),
+                                            ]).isValid(value.text)
+                                        ? SizedBox.shrink()
+                                        : successIcon,
+                                  );
+                                })
+                          ],
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Radio<LoginStrategy>(
+                              value: LoginStrategy.autoLogin,
+                              groupValue: whoAreYouModel.loginStrategy,
+                              onChanged: (_) => whoAreYouModel.loginStrategy =
+                                  LoginStrategy.autoLogin),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child:
+                                Text(lang.whoAreYouPageLoginStrategyAutoLogin),
+                          )
                         ],
                       ),
-                    ),
-                    Row(
-                      children: [
-                        Radio<LoginStrategy>(
-                            value: LoginStrategy.autoLogin,
-                            groupValue: whoAreYouModel.loginStrategy,
-                            onChanged: (_) => whoAreYouModel.loginStrategy =
-                                LoginStrategy.autoLogin),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(lang.whoAreYouPageLoginStrategyAutoLogin),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Radio<LoginStrategy>(
-                            value: LoginStrategy.requirePassword,
-                            groupValue: whoAreYouModel.loginStrategy,
-                            onChanged: (_) => whoAreYouModel.loginStrategy =
-                                LoginStrategy.requirePassword),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                              lang.whoAreYouPageLoginStrategyRequirePassword),
-                        )
-                      ],
-                    ),
-                  ],
+                      Row(
+                        children: [
+                          Radio<LoginStrategy>(
+                              value: LoginStrategy.requirePassword,
+                              groupValue: whoAreYouModel.loginStrategy,
+                              onChanged: (_) => whoAreYouModel.loginStrategy =
+                                  LoginStrategy.requirePassword),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                                lang.whoAreYouPageLoginStrategyRequirePassword),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               actions: <WizardAction>[
@@ -335,13 +329,9 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                   label: lang.startInstallingButtonText,
                   highlighted: true,
                   onActivated: () async {
-                    if (_realNameFormKey.currentState!.validate() &&
-                        _computerNameFormKey.currentState!.validate() &&
-                        _usernameFormKey.currentState!.validate() &&
-                        _passwordFormKey.currentState!.validate() &&
-                        _confirmPasswordFormKey.currentState!.validate()) {
-                      final client =
-                          Provider.of<SubiquityClient>(context, listen: false);
+                    if (_whoAreYouFormKey.currentState!.validate()) {
+                      // final client =
+                      //     Provider.of<SubiquityClient>(context, listen: false);
 
                       final key = encrypt.Key.fromLength(32);
                       final iv = encrypt.IV.fromLength(16);
@@ -350,11 +340,13 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                       final encrypted =
                           encrypter.encrypt(whoAreYouModel.password, iv: iv);
 
-                      await client.setIdentity(IdentityData(
-                          hostname: whoAreYouModel.hostName,
-                          realname: whoAreYouModel.realName,
-                          username: whoAreYouModel.username,
-                          cryptedPassword: encrypted.toString()));
+                      print(whoAreYouModel.hostName);
+
+                      // await client.setIdentity(IdentityData(
+                      //     hostname: whoAreYouModel.hostName,
+                      //     realname: whoAreYouModel.realName,
+                      //     username: whoAreYouModel.username,
+                      //     cryptedPassword: encrypted.toString()));
 
                       Navigator.pushNamed(context, Routes.chooseYourLook);
                     }

@@ -217,7 +217,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                             width: size.width / screenFactor,
                             spacing: padding,
                             controller: _confirmPasswordController,
-                            validator: ConfirmPasswordValidator(
+                            validator: _ConfirmPasswordValidator(
                                 whoAreYouModel.password,
                                 errorText: lang
                                     .whoAreYouPageConfirmPasswordValidatorErrorText),
@@ -278,17 +278,14 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
   }
 }
 
-///
-class ConfirmPasswordValidator extends FieldValidator<String?> {
-  ///
-  final String password;
+class _ConfirmPasswordValidator extends FieldValidator<String?> {
+  final String _password;
 
-  ///
-  ConfirmPasswordValidator(this.password, {required String errorText})
+  _ConfirmPasswordValidator(this._password, {required String errorText})
       : super(errorText);
 
   @override
   bool isValid(String? value) {
-    return value?.isNotEmpty == true && value == password;
+    return value?.isNotEmpty == true && value == _password;
   }
 }

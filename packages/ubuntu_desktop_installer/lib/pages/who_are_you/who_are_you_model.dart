@@ -41,7 +41,7 @@ class WhoAreYouModel extends ChangeNotifier {
   }
 
   ///
-  Future<void> loadProfileSetup() async {}
+  Future<void> loadIdentity() async {}
 }
 
 /// An enum for storing the login strategy.

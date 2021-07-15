@@ -49,7 +49,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
     super.initState();
 
     final whoAreYouModel = Provider.of<WhoAreYouModel>(context, listen: false);
-    whoAreYouModel.loadProfileSetup().then((_) {
+    whoAreYouModel.loadIdentity().then((_) {
       _usernameController.text = whoAreYouModel.username;
     });
 

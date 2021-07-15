@@ -3,35 +3,44 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:subiquity_client/subiquity_client.dart';
 
-///
+/// [WhoAreYouPage]'s view model.
 class WhoAreYouModel extends ChangeNotifier {
-  ///
-  final SubiquityClient _client;
+  /// Creates the model with the given client.
+  WhoAreYouModel(this._client) {
+    Listenable.merge([_loginStrategy, _identity, _password])
+        .addListener(notifyListeners);
+  }
 
-  ///
-  LoginStrategy get loginStrategy => _loginStrategy.value;
+  final SubiquityClient _client;
+  final _identity = ValueNotifier<IdentityData>(IdentityData());
   final _loginStrategy =
       ValueNotifier<LoginStrategy>(LoginStrategy.requirePassword);
+  final _password = ValueNotifier<String>('');
+
+  /// The current login strategy.
+  LoginStrategy get loginStrategy => _loginStrategy.value;
   set loginStrategy(LoginStrategy value) => _loginStrategy.value = value;
 
-  ///
-  String get realName => _realName.value;
-  final _realName = ValueNotifier<String>('');
-  set realName(String value) => _realName.value = value;
+  /// The current real name.
+  String get realName => _identity.value.realname ?? '';
+  set realName(String value) {
+    _identity.value = _identity.value.copyWith(realname: value);
+  }
 
-  ///
-  String get hostName => _hostName.value;
-  final _hostName = ValueNotifier<String>('');
-  set hostName(String value) => _hostName.value = value;
+  /// The current hostname.
+  String get hostName => _identity.value.hostname ?? '';
+  set hostName(String value) {
+    _identity.value = _identity.value.copyWith(hostname: value);
+  }
 
-  ///
-  String get username => _username.value;
-  final _username = ValueNotifier<String>('');
-  set username(String value) => _username.value = value;
+  /// The the current username.
+  String get username => _identity.value.username ?? '';
+  set username(String value) {
+    _identity.value = _identity.value.copyWith(username: value);
+  }
 
-  ///
+  /// The current password.
   String get password => _password.value;
-  final _password = ValueNotifier<String>('');
   set password(String value) {
     _password.value = value;
   }
@@ -53,29 +62,34 @@ class WhoAreYouModel extends ChangeNotifier {
     return null;
   }
 
-  ///
-  WhoAreYouModel(this._client) {
-    Listenable.merge(
-            [_loginStrategy, _realName, _hostName, _username, _password])
-        .addListener(notifyListeners);
+  /// Loads the identity data from the server.
+  Future<void> loadIdentity() {
+    return _client.identity().then((identity) => _identity.value = identity);
   }
 
-  ///
-  Future<void> loadIdentity() async {}
+  /// Saves the identity data to the server.
+  Future<void> saveIdentity() {
+    return _client.setIdentity(
+      _identity.value.copyWith(cryptedPassword: encryptPassword(password)),
+    );
+  }
 
-  ///
-  Future<void> saveIdentify() async {
-    final key = encrypt.Key.fromLength(32);
-    final iv = encrypt.IV.fromLength(16);
-    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+  static final _encryptionIV = encrypt.IV.fromLength(16);
+  static encrypt.Encrypter get _encrypter =>
+      encrypt.Encrypter(encrypt.AES(encrypt.Key.fromLength(32)));
 
-    final encryptedPassword = encrypter.encrypt(password, iv: iv);
+  /// Encrypts a password.
+  @visibleForTesting
+  static String encryptPassword(String password) {
+    assert(password.isNotEmpty);
+    return _encrypter.encrypt(password, iv: _encryptionIV).base64;
+  }
 
-    await _client.setIdentity(IdentityData(
-        realname: realName,
-        hostname: hostName,
-        username: username,
-        cryptedPassword: encryptedPassword.toString()));
+  /// Decrypts a password.
+  @visibleForTesting
+  static String decryptPassword(String encryptedPassword) {
+    assert(encryptedPassword.isNotEmpty);
+    return _encrypter.decrypt64(encryptedPassword, iv: _encryptionIV);
   }
 }
 

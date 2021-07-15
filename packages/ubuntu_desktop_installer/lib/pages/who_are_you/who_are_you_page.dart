@@ -267,7 +267,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                   highlighted: true,
                   onActivated: () async {
                     if (_whoAreYouFormKey.currentState!.validate()) {
-                      await whoAreYouModel.saveIdentify();
+                      await whoAreYouModel.saveIdentity();
 
                       Navigator.pushNamed(context, Routes.chooseYourLook);
                     }

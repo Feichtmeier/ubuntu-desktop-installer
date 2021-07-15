@@ -1,3 +1,5 @@
+import 'package:encrypt/encrypt.dart' as encrypt;
+
 import 'package:flutter/material.dart';
 import 'package:subiquity_client/subiquity_client.dart';
 
@@ -42,6 +44,21 @@ class WhoAreYouModel extends ChangeNotifier {
 
   ///
   Future<void> loadIdentity() async {}
+
+  ///
+  Future<void> saveIdentify() async {
+    final key = encrypt.Key.fromLength(32);
+    final iv = encrypt.IV.fromLength(16);
+    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+
+    final encryptedPassword = encrypter.encrypt(password, iv: iv);
+
+    await _client.setIdentity(IdentityData(
+        realname: realName,
+        hostname: hostName,
+        username: username,
+        cryptedPassword: encryptedPassword.toString()));
+  }
 }
 
 /// An enum for storing the login strategy.

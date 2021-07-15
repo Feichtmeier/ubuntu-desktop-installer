@@ -1,4 +1,3 @@
-import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:provider/provider.dart';
@@ -330,23 +329,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                   highlighted: true,
                   onActivated: () async {
                     if (_whoAreYouFormKey.currentState!.validate()) {
-                      // final client =
-                      //     Provider.of<SubiquityClient>(context, listen: false);
-
-                      final key = encrypt.Key.fromLength(32);
-                      final iv = encrypt.IV.fromLength(16);
-                      final encrypter = encrypt.Encrypter(encrypt.AES(key));
-
-                      final encrypted =
-                          encrypter.encrypt(whoAreYouModel.password, iv: iv);
-
-                      print(whoAreYouModel.hostName);
-
-                      // await client.setIdentity(IdentityData(
-                      //     hostname: whoAreYouModel.hostName,
-                      //     realname: whoAreYouModel.realName,
-                      //     username: whoAreYouModel.username,
-                      //     cryptedPassword: encrypted.toString()));
+                      await whoAreYouModel.saveIdentify();
 
                       Navigator.pushNamed(context, Routes.chooseYourLook);
                     }

@@ -299,10 +299,8 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                         Radio<LoginStrategy>(
                             value: LoginStrategy.autoLogin,
                             groupValue: _whoAreYouModel.loginStrategy,
-                            onChanged: (_) => setState(() {
-                                  _whoAreYouModel.loginStrategy =
-                                      _whoAreYouModel.loginStrategy;
-                                })),
+                            onChanged: (_) => _whoAreYouModel.loginStrategy =
+                                _whoAreYouModel.loginStrategy),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(lang.whoAreYouPageLoginStrategyAutoLogin),
@@ -314,10 +312,8 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                         Radio<LoginStrategy>(
                             value: LoginStrategy.requirePassword,
                             groupValue: _whoAreYouModel.loginStrategy,
-                            onChanged: (_) => setState(() {
-                                  _whoAreYouModel.loginStrategy =
-                                      LoginStrategy.requirePassword;
-                                })),
+                            onChanged: (_) => _whoAreYouModel.loginStrategy =
+                                LoginStrategy.requirePassword),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(

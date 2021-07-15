@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:provider/provider.dart';
 import 'package:subiquity_client/subiquity_client.dart';
 import 'package:yaru/yaru.dart' as yaru;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import '../../routes.dart';
 import '../../widgets/localized_view.dart';
 import '../../widgets/validated_input.dart';
@@ -212,51 +213,17 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                   whoAreYouModel.passwordStrength))),
                       Padding(
                         padding: const EdgeInsets.only(top: 10, bottom: 10),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width /
-                                  screenFactor,
-                              child: TextFormField(
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                controller: _confirmPasswordController,
-                                validator: (val) {
-                                  return MatchValidator(
-                                          errorText: lang
-                                              .whoAreYouPageConfirmPasswordValidatorErrorText)
-                                      .validateMatch(
-                                          val!, _passwordController.text);
-                                },
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText:
-                                        lang.whoAreYouPageConfirmPasswordLabel),
-                              ),
-                            ),
-                            ValueListenableBuilder<TextEditingValue>(
-                                valueListenable: _confirmPasswordController,
-                                builder: (context, value, child) {
-                                  return Padding(
-                                    padding:
-                                        const EdgeInsets.only(left: padding),
-                                    child: value.text !=
-                                                _passwordController.text ||
-                                            !MultiValidator([
-                                              RequiredValidator(
-                                                  errorText: lang
-                                                      .whoAreYouPagePasswordRequiredValidatorErrorText),
-                                              MinLengthValidator(2,
-                                                  errorText: lang
-                                                      .whoAreYouPagePasswordMinLengthValidatorErrorText),
-                                            ]).isValid(value.text)
-                                        ? SizedBox.shrink()
-                                        : successIcon,
-                                  );
-                                })
-                          ],
-                        ),
+                        child: ValidatedInput(
+                            width: size.width / screenFactor,
+                            spacing: padding,
+                            controller: _confirmPasswordController,
+                            validator: ConfirmPasswordValidator(
+                                whoAreYouModel.password,
+                                errorText: lang
+                                    .whoAreYouPageConfirmPasswordValidatorErrorText),
+                            label: lang.whoAreYouPageConfirmPasswordLabel,
+                            obscureText: true,
+                            successWidget: successIcon),
                       ),
                       Row(
                         children: [
@@ -308,5 +275,20 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                 ),
               ],
             ));
+  }
+}
+
+///
+class ConfirmPasswordValidator extends FieldValidator<String?> {
+  ///
+  final String password;
+
+  ///
+  ConfirmPasswordValidator(this.password, {required String errorText})
+      : super(errorText);
+
+  @override
+  bool isValid(String? value) {
+    return value?.isNotEmpty == true && value == password;
   }
 }

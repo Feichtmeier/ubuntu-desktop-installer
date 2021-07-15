@@ -47,8 +47,8 @@ class WhoAreYouModel extends ChangeNotifier {
 
   /// Find the strength of the password depending on regexps
   PasswordStrength? get passwordStrength {
-    var strongPassword = RegExp(r'(?=.*?[#?!@$%^&*-])');
-    var averagePassword = RegExp(r'(^.*(?=.{6,})(?=.*\d).*$)');
+    final strongPassword = RegExp(r'(?=.*?[#?!@$%^&*-])');
+    final averagePassword = RegExp(r'(^.*(?=.{6,})(?=.*\d).*$)');
 
     if (strongPassword.hasMatch(password) && password.length > 8) {
       return PasswordStrength.strongPassword;

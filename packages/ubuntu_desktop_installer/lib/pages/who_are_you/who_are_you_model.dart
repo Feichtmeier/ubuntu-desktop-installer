@@ -6,7 +6,6 @@ import 'package:subiquity_client/subiquity_client.dart';
 ///
 class WhoAreYouModel extends ChangeNotifier {
   ///
-  // ignore: unused_field
   final SubiquityClient _client;
 
   ///
@@ -33,7 +32,26 @@ class WhoAreYouModel extends ChangeNotifier {
   ///
   String get password => _password.value;
   final _password = ValueNotifier<String>('');
-  set password(String value) => _password.value = value;
+  set password(String value) {
+    _password.value = value;
+  }
+
+  /// Find the strength of the password depending on regexps
+  PasswordStrength? get passwordStrength {
+    var strongPassword = RegExp(r'(?=.*?[#?!@$%^&*-])');
+    var averagePassword = RegExp(r'(^.*(?=.{6,})(?=.*\d).*$)');
+
+    if (strongPassword.hasMatch(password) && password.length > 8) {
+      return PasswordStrength.strongPassword;
+    }
+    if (averagePassword.hasMatch(password)) {
+      return PasswordStrength.averagePassword;
+    }
+    if (password.isNotEmpty && password.length > 1) {
+      return PasswordStrength.weakPassword;
+    }
+    return null;
+  }
 
   ///
   WhoAreYouModel(this._client) {
@@ -71,4 +89,16 @@ enum LoginStrategy {
   /// If selected can be used for the representation
   /// of the user preference to log in without a password.
   autoLogin
+}
+
+/// The strength of the password
+enum PasswordStrength {
+  /// Representing weak password
+  weakPassword,
+
+  /// Representing an average password
+  averagePassword,
+
+  /// Representing a strong password
+  strongPassword
 }

@@ -3,7 +3,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:provider/provider.dart';
 import 'package:subiquity_client/subiquity_client.dart';
 import 'package:yaru/yaru.dart' as yaru;
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../routes.dart';
 import '../../widgets/localized_view.dart';
 import '../../widgets/validated_input.dart';
@@ -74,46 +74,39 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
     super.dispose();
   }
 
-  Widget findPassWordStrengthLabel(
-      BuildContext context,
-      String value,
-      String weakPasswordLabel,
-      String averagePasswordLabel,
-      String strongPasswordLabel) {
-    final strongPattenPasswordValidator =
-        PatternValidator(r'(?=.*?[#?!@$%^&*-])', errorText: '');
-    final goodPatternPasswordValidator =
-        PatternValidator(r'(^.*(?=.{6,})(?=.*\d).*$)', errorText: '');
-    final weakPasswordValidator = MultiValidator([
-      RequiredValidator(errorText: ''),
-      MinLengthValidator(2, errorText: ''),
-    ]);
-
-    if (strongPattenPasswordValidator.isValid(value)) {
-      return Text(strongPasswordLabel,
-          style: TextStyle(
-            color: yaru.Colors.green,
-          ));
-    } else if (goodPatternPasswordValidator.isValid(value)) {
-      return Text(averagePasswordLabel);
-    }
-    if (weakPasswordValidator.isValid(value)) {
-      return Text(weakPasswordLabel,
-          style: TextStyle(
-            color: yaru.Colors.red,
-          ));
-    }
-
-    return Text('');
-  }
-
   @override
   Widget build(BuildContext context) {
     const screenFactor = 1.6;
     const checkMarksLeftPadding = 10.0;
     final successIcon = Icon(Icons.check_circle, color: yaru.Colors.green);
-
     final whoAreYouModel = Provider.of<WhoAreYouModel>(context, listen: true);
+
+    Widget findPassWordStrengthLabel(
+      PasswordStrength? passwordStrength,
+    ) {
+      final lang = AppLocalizations.of(context);
+      final weakPasswordLabel = lang!.whoAreYouPagePasswordWeakPasswordLabel;
+      final averagePasswordLabel =
+          lang.whoAreYouPagePasswordAveragePasswordLabel;
+      final strongPasswordLabel = lang.whoAreYouPagePasswordStrongPasswordLabel;
+
+      switch (passwordStrength) {
+        case PasswordStrength.weakPassword:
+          return Text(weakPasswordLabel,
+              style: TextStyle(
+                color: yaru.Colors.red,
+              ));
+        case PasswordStrength.averagePassword:
+          return Text(averagePasswordLabel);
+        case PasswordStrength.strongPassword:
+          return Text(strongPasswordLabel,
+              style: TextStyle(
+                color: yaru.Colors.green,
+              ));
+        default:
+          return SizedBox.shrink();
+      }
+    }
 
     return LocalizedView(
         builder: (context, lang) => WizardPage(
@@ -230,11 +223,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                       padding: const EdgeInsets.only(
                                           left: checkMarksLeftPadding),
                                       child: findPassWordStrengthLabel(
-                                          context,
-                                          value.text,
-                                          lang.whoAreYouPagePasswordWeakPasswordLabel,
-                                          lang.whoAreYouPagePasswordAveragePasswordLabel,
-                                          lang.whoAreYouPagePasswordStrongPasswordLabel));
+                                          whoAreYouModel.passwordStrength));
                                 }),
                           ],
                         ),

@@ -21,7 +21,8 @@ class WhoAreYouPage extends StatefulWidget {
   ///
   static Widget create(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => WhoAreYouModel(),
+      create: (_) =>
+          WhoAreYouModel(Provider.of<SubiquityClient>(context, listen: false)),
       child: WhoAreYouPage(),
     );
   }

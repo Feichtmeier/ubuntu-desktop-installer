@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:subiquity_client/subiquity_client.dart';
 
 ///
 class WhoAreYouModel extends ChangeNotifier {
+  ///
+  // ignore: unused_field
+  final SubiquityClient _client;
+
   ///
   LoginStrategy get loginStrategy => _loginStrategy.value;
   final _loginStrategy =
@@ -29,7 +34,7 @@ class WhoAreYouModel extends ChangeNotifier {
   set password(String value) => _password.value = value;
 
   ///
-  WhoAreYouModel() {
+  WhoAreYouModel(this._client) {
     Listenable.merge(
             [_loginStrategy, _realName, _hostName, _username, _password])
         .addListener(notifyListeners);

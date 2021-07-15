@@ -137,8 +137,8 @@ void main() {
     // 9
     testPasswordStrength('passsword', equals(PasswordStrength.weakPassword));
     testPasswordStrength('p4sssword', equals(PasswordStrength.averagePassword));
-    testPasswordStrength('p@sssword', equals(PasswordStrength.strongPassword));
     testPasswordStrength('P4sssword', equals(PasswordStrength.averagePassword));
+    testPasswordStrength('p@sssword', equals(PasswordStrength.strongPassword));
     testPasswordStrength('P@sssword', equals(PasswordStrength.strongPassword));
   });
 }

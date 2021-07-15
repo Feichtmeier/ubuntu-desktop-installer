@@ -31,12 +31,6 @@ class WhoAreYouPage extends StatefulWidget {
 }
 
 class _WhoAreYouPageState extends State<WhoAreYouPage> {
-  final _realNameController = TextEditingController();
-  final _computerNameController = TextEditingController();
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-
   final _whoAreYouFormKey = GlobalKey<FormState>();
 
   @override
@@ -44,34 +38,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
     super.initState();
 
     final whoAreYouModel = Provider.of<WhoAreYouModel>(context, listen: false);
-    whoAreYouModel.loadIdentity().then((_) {
-      _usernameController.text = whoAreYouModel.username;
-    });
-
-    _realNameController.addListener(() {
-      whoAreYouModel.realName = _realNameController.text;
-    });
-
-    _computerNameController.addListener(() {
-      whoAreYouModel.hostName = _computerNameController.text;
-    });
-
-    _usernameController.addListener(() {
-      whoAreYouModel.username = _usernameController.text;
-    });
-    _passwordController.addListener(() {
-      whoAreYouModel.password = _passwordController.text;
-    });
-  }
-
-  @override
-  void dispose() {
-    _realNameController.dispose();
-    _computerNameController.dispose();
-    _usernameController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    super.dispose();
+    whoAreYouModel.loadIdentity();
   }
 
   @override
@@ -124,7 +91,8 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                   child: ValidatedInput(
                     width: size.width / screenFactor,
                     spacing: padding,
-                    controller: _realNameController,
+                    initialValue: whoAreYouModel.realName,
+                    onChanged: (value) => whoAreYouModel.realName = value,
                     validator: MultiValidator([
                       RequiredValidator(
                           errorText: lang
@@ -133,28 +101,28 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                           errorText: lang
                               .whoAreYouPageRealNameMinLengthValidatorErrorText)
                     ]),
-                    label: lang.whoAreYouPageRealNameLabel,
-                    obscureText: false,
+                    labelText: lang.whoAreYouPageRealNameLabel,
                     successWidget: successIcon,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: padding, bottom: padding),
                   child: ValidatedInput(
-                      width: size.width / screenFactor,
-                      spacing: padding,
-                      controller: _computerNameController,
-                      validator: MultiValidator([
-                        RequiredValidator(
-                            errorText: lang
-                                .whoAreYouPageComputerNameRequiredValidatorErrorText),
-                        MinLengthValidator(2,
-                            errorText: lang
-                                .whoAreYouPageComputerNameMinLengthValidatorErrorText)
-                      ]),
-                      label: lang.whoAreYouPageComputerNameLabel,
-                      successWidget: successIcon,
-                      obscureText: false),
+                    width: size.width / screenFactor,
+                    spacing: padding,
+                    initialValue: whoAreYouModel.hostName,
+                    onChanged: (value) => whoAreYouModel.hostName = value,
+                    validator: MultiValidator([
+                      RequiredValidator(
+                          errorText: lang
+                              .whoAreYouPageComputerNameRequiredValidatorErrorText),
+                      MinLengthValidator(2,
+                          errorText: lang
+                              .whoAreYouPageComputerNameMinLengthValidatorErrorText)
+                    ]),
+                    labelText: lang.whoAreYouPageComputerNameLabel,
+                    successWidget: successIcon,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15),
@@ -171,7 +139,8 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                   child: ValidatedInput(
                     width: size.width / screenFactor,
                     spacing: padding,
-                    controller: _usernameController,
+                    initialValue: whoAreYouModel.username,
+                    onChanged: (value) => whoAreYouModel.username = value,
                     validator: MultiValidator([
                       RequiredValidator(
                           errorText: lang
@@ -184,43 +153,44 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                           errorText: lang
                               .whoAreYouPageUsernamePatternValidatorErrorText)
                     ]),
-                    label: lang.whoAreYouPageUsernameLabel,
-                    obscureText: false,
+                    labelText: lang.whoAreYouPageUsernameLabel,
                     successWidget: successIcon,
                   ),
                 ),
                 Padding(
-                    padding:
-                        const EdgeInsets.only(top: padding, bottom: padding),
-                    child: ValidatedInput(
-                        width: size.width / screenFactor,
-                        spacing: padding,
-                        controller: _passwordController,
-                        validator: MultiValidator([
-                          RequiredValidator(
-                              errorText: lang
-                                  .whoAreYouPagePasswordRequiredValidatorErrorText),
-                          MinLengthValidator(2,
-                              errorText: lang
-                                  .whoAreYouPagePasswordMinLengthValidatorErrorText),
-                        ]),
-                        label: lang.whoAreYouPagePasswordLabel,
-                        obscureText: true,
-                        successWidget: buildPasswordStrengthLabel(
-                            whoAreYouModel.passwordStrength))),
+                  padding: const EdgeInsets.only(top: padding, bottom: padding),
+                  child: ValidatedInput(
+                    width: size.width / screenFactor,
+                    spacing: padding,
+                    initialValue: whoAreYouModel.password,
+                    onChanged: (value) => whoAreYouModel.password = value,
+                    validator: MultiValidator([
+                      RequiredValidator(
+                          errorText: lang
+                              .whoAreYouPagePasswordRequiredValidatorErrorText),
+                      MinLengthValidator(2,
+                          errorText: lang
+                              .whoAreYouPagePasswordMinLengthValidatorErrorText),
+                    ]),
+                    labelText: lang.whoAreYouPagePasswordLabel,
+                    obscureText: true,
+                    successWidget: buildPasswordStrengthLabel(
+                        whoAreYouModel.passwordStrength),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10, bottom: 10),
                   child: ValidatedInput(
-                      width: size.width / screenFactor,
-                      spacing: padding,
-                      controller: _confirmPasswordController,
-                      validator: _ConfirmPasswordValidator(
-                          whoAreYouModel.password,
-                          errorText: lang
-                              .whoAreYouPageConfirmPasswordValidatorErrorText),
-                      label: lang.whoAreYouPageConfirmPasswordLabel,
-                      obscureText: true,
-                      successWidget: successIcon),
+                    width: size.width / screenFactor,
+                    spacing: padding,
+                    validator: _ConfirmPasswordValidator(
+                        whoAreYouModel.password,
+                        errorText: lang
+                            .whoAreYouPageConfirmPasswordValidatorErrorText),
+                    labelText: lang.whoAreYouPageConfirmPasswordLabel,
+                    obscureText: true,
+                    successWidget: successIcon,
+                  ),
                 ),
                 Row(
                   children: [

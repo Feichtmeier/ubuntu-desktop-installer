@@ -76,8 +76,9 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    const padding = 10.0;
     const screenFactor = 1.6;
-    const checkMarksLeftPadding = 10.0;
     final successIcon = Icon(Icons.check_circle, color: yaru.Colors.green);
     final whoAreYouModel = Provider.of<WhoAreYouModel>(context, listen: true);
 
@@ -118,11 +119,11 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        padding: const EdgeInsets.only(
+                            top: padding, bottom: padding),
                         child: ValidatedInput(
-                          width:
-                              MediaQuery.of(context).size.width / screenFactor,
-                          spacing: checkMarksLeftPadding,
+                          width: size.width / screenFactor,
+                          spacing: padding,
                           controller: _realNameController,
                           validator: MultiValidator([
                             RequiredValidator(
@@ -138,11 +139,11 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        padding: const EdgeInsets.only(
+                            top: padding, bottom: padding),
                         child: ValidatedInput(
-                            width: MediaQuery.of(context).size.width /
-                                screenFactor,
-                            spacing: checkMarksLeftPadding,
+                            width: size.width / screenFactor,
+                            spacing: padding,
                             controller: _computerNameController,
                             validator: MultiValidator([
                               RequiredValidator(
@@ -159,8 +160,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 15),
                         child: SizedBox(
-                          width:
-                              MediaQuery.of(context).size.width / screenFactor,
+                          width: size.width / screenFactor,
                           child: Text(
                             lang.whoAreYouPageComputerNameInfo,
                             style: Theme.of(context).textTheme.caption,
@@ -168,11 +168,11 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        padding: const EdgeInsets.only(
+                            top: padding, bottom: padding),
                         child: ValidatedInput(
-                          width:
-                              MediaQuery.of(context).size.width / screenFactor,
-                          spacing: checkMarksLeftPadding,
+                          width: size.width / screenFactor,
+                          spacing: padding,
                           controller: _usernameController,
                           validator: MultiValidator([
                             RequiredValidator(
@@ -192,42 +192,24 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 10, bottom: 10),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width /
-                                  screenFactor,
-                              child: TextFormField(
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                validator: MultiValidator([
-                                  RequiredValidator(
-                                      errorText: lang
-                                          .whoAreYouPagePasswordRequiredValidatorErrorText),
-                                  MinLengthValidator(2,
-                                      errorText: lang
-                                          .whoAreYouPagePasswordMinLengthValidatorErrorText),
-                                ]),
-                                controller: _passwordController,
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: lang.whoAreYouPagePasswordLabel),
-                              ),
-                            ),
-                            ValueListenableBuilder<TextEditingValue>(
-                                valueListenable: _passwordController,
-                                builder: (context, value, child) {
-                                  return Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: checkMarksLeftPadding),
-                                      child: findPassWordStrengthLabel(
-                                          whoAreYouModel.passwordStrength));
-                                }),
-                          ],
-                        ),
-                      ),
+                          padding: const EdgeInsets.only(
+                              top: padding, bottom: padding),
+                          child: ValidatedInput(
+                              width: size.width / screenFactor,
+                              spacing: padding,
+                              controller: _passwordController,
+                              validator: MultiValidator([
+                                RequiredValidator(
+                                    errorText: lang
+                                        .whoAreYouPagePasswordRequiredValidatorErrorText),
+                                MinLengthValidator(2,
+                                    errorText: lang
+                                        .whoAreYouPagePasswordMinLengthValidatorErrorText),
+                              ]),
+                              label: lang.whoAreYouPagePasswordLabel,
+                              obscureText: true,
+                              successWidget: findPassWordStrengthLabel(
+                                  whoAreYouModel.passwordStrength))),
                       Padding(
                         padding: const EdgeInsets.only(top: 10, bottom: 10),
                         child: Row(
@@ -257,8 +239,8 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                                 valueListenable: _confirmPasswordController,
                                 builder: (context, value, child) {
                                   return Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: checkMarksLeftPadding),
+                                    padding:
+                                        const EdgeInsets.only(left: padding),
                                     child: value.text !=
                                                 _passwordController.text ||
                                             !MultiValidator([

@@ -79,7 +79,9 @@ class _ValidatedFormFieldState extends State<ValidatedFormField> {
       validator: widget.validator,
       obscureText: widget.obscureText,
       decoration: InputDecoration(
-          border: OutlineInputBorder(), labelText: widget.labelText),
+        border: OutlineInputBorder(),
+        labelText: widget.labelText,
+      ),
     );
     return Row(
       children: [
@@ -87,14 +89,16 @@ class _ValidatedFormFieldState extends State<ValidatedFormField> {
             ? Expanded(child: formField)
             : SizedBox(width: widget.fieldWidth, child: formField),
         ValueListenableBuilder<TextEditingValue>(
-            valueListenable: _controller,
-            builder: (context, value, child) {
-              return Padding(
-                  padding: EdgeInsets.only(left: widget.spacing ?? 0.0),
-                  child: !widget.validator.isValid(value.text)
-                      ? SizedBox.shrink()
-                      : widget.successWidget);
-            })
+          valueListenable: _controller,
+          builder: (context, value, child) {
+            return Padding(
+              padding: EdgeInsets.only(left: widget.spacing ?? 0.0),
+              child: !widget.validator.isValid(value.text)
+                  ? SizedBox.shrink()
+                  : widget.successWidget,
+            );
+          },
+        ),
       ],
     );
   }

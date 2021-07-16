@@ -5,8 +5,7 @@ import 'package:subiquity_client/subiquity_client.dart';
 
 import '../../app_theme.dart';
 import '../../routes.dart';
-import '../../widgets/localized_view.dart';
-import '../../widgets/validated_input.dart';
+import '../../widgets.dart';
 import '../wizard_page.dart';
 import 'who_are_you_model.dart';
 
@@ -88,7 +87,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: padding, bottom: padding),
-                  child: ValidatedInput(
+                  child: ValidatedFormField(
                     fieldWidth: size.width / screenFactor,
                     spacing: padding,
                     initialValue: whoAreYouModel.realName,
@@ -107,7 +106,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: padding, bottom: padding),
-                  child: ValidatedInput(
+                  child: ValidatedFormField(
                     fieldWidth: size.width / screenFactor,
                     spacing: padding,
                     initialValue: whoAreYouModel.hostName,
@@ -136,7 +135,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: padding, bottom: padding),
-                  child: ValidatedInput(
+                  child: ValidatedFormField(
                     fieldWidth: size.width / screenFactor,
                     spacing: padding,
                     initialValue: whoAreYouModel.username,
@@ -159,7 +158,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: padding, bottom: padding),
-                  child: ValidatedInput(
+                  child: ValidatedFormField(
                     fieldWidth: size.width / screenFactor,
                     spacing: padding,
                     initialValue: whoAreYouModel.password,
@@ -180,7 +179,7 @@ class _WhoAreYouPageState extends State<WhoAreYouPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10, bottom: 10),
-                  child: ValidatedInput(
+                  child: ValidatedFormField(
                     fieldWidth: size.width / screenFactor,
                     spacing: padding,
                     validator: _ConfirmPasswordValidator(

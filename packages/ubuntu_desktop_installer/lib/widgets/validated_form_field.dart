@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 /// A [TextFormField] rewarding a validated input with a specific widget.
-class ValidatedInput extends StatefulWidget {
+class ValidatedFormField extends StatefulWidget {
   /// The controller used to get the [TextField] values. If [controller] is
   /// null, a controller is created internally and its text is set to
   /// [initialValue].
@@ -41,7 +41,7 @@ class ValidatedInput extends StatefulWidget {
   /// Creates a [TextFormField] and a check mark.
   ///
   /// The `validator' helps to decide when to show the check mark.
-  ValidatedInput({
+  ValidatedFormField({
     Key? key,
     this.controller,
     this.initialValue,
@@ -56,10 +56,10 @@ class ValidatedInput extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ValidatedInput> createState() => _ValidatedInputState();
+  State<ValidatedFormField> createState() => _ValidatedFormFieldState();
 }
 
-class _ValidatedInputState extends State<ValidatedInput> {
+class _ValidatedFormFieldState extends State<ValidatedFormField> {
   late final TextEditingController _controller;
 
   @override

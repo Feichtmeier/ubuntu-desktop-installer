@@ -9,7 +9,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Material(
-          child: ValidatedInput(
+          child: ValidatedFormField(
             autofocus: true,
             validator: MinLengthValidator(2, errorText: 'error'),
             successWidget: const Text('success'),
@@ -21,13 +21,13 @@ void main() {
     expect(find.text('error'), findsNothing);
     expect(find.text('success'), findsNothing);
 
-    await tester.enterText(find.byType(ValidatedInput), 'u');
+    await tester.enterText(find.byType(ValidatedFormField), 'u');
     await tester.pumpAndSettle();
 
     expect(find.text('error'), findsOneWidget);
     expect(find.text('success'), findsNothing);
 
-    await tester.enterText(find.byType(ValidatedInput), 'buntu');
+    await tester.enterText(find.byType(ValidatedFormField), 'buntu');
     await tester.pumpAndSettle();
 
     expect(find.text('error'), findsNothing);
@@ -39,7 +39,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Material(
-          child: ValidatedInput(
+          child: ValidatedFormField(
             autofocus: true,
             controller: controller,
             validator: FakeValidator(),
@@ -50,7 +50,7 @@ void main() {
 
     expect(find.text('value'), findsOneWidget);
 
-    await tester.enterText(find.byType(ValidatedInput), 'ubuntu');
+    await tester.enterText(find.byType(ValidatedFormField), 'ubuntu');
 
     expect(controller.text, equals('ubuntu'));
     expect(find.text('ubuntu'), findsOneWidget);
@@ -61,7 +61,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Material(
-          child: ValidatedInput(
+          child: ValidatedFormField(
             autofocus: true,
             initialValue: 'initial',
             onChanged: (v) => value = v,
@@ -73,7 +73,7 @@ void main() {
 
     expect(find.text('initial'), findsOneWidget);
 
-    await tester.enterText(find.byType(ValidatedInput), 'ubuntu');
+    await tester.enterText(find.byType(ValidatedFormField), 'ubuntu');
 
     expect(value, equals('ubuntu'));
     expect(find.text('ubuntu'), findsOneWidget);
@@ -83,7 +83,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Material(
-          child: ValidatedInput(
+          child: ValidatedFormField(
             fieldWidth: 123,
             validator: FakeValidator(),
           ),
@@ -102,7 +102,7 @@ void main() {
           child: Center(
             child: SizedBox(
               width: 123,
-              child: ValidatedInput(
+              child: ValidatedFormField(
                 validator: FakeValidator(),
               ),
             ),

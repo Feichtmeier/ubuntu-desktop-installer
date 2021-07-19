@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import '../../widgets.dart';
 import '../wizard_page.dart';
 import 'city.dart';
@@ -20,9 +19,10 @@ class _WhereAreYouPageState extends State<WhereAreYouPage> {
 
   Future<List<City>> getCities() async {
     final response = await rootBundle.loadString('assets/cities.json');
-    final parsed =
-        json.decode(response.toString()).cast<Map<String, dynamic>>();
-    _cityList = parsed.map<City>((json) => City.fromJson(json)).toList();
+    _cityList = json
+        .decode(response.toString())
+        .map<City>((json) => City.fromJson(json))
+        .toList();
     return _cityList;
   }
 
